@@ -31,7 +31,7 @@ export function Features() {
     <section id="features" className="py-16 md:py-24 bg-white px-4">
       <div className="container mx-auto">
         <div className="text-center mb-12 md:mb-16">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 md:mb-4">Why CoughTriage AI?</h2>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 md:mb-4">Why CoughSense?</h2>
           <p className="text-slate-600 max-w-2xl mx-auto text-sm sm:text-base leading-relaxed">
             Our platform combines cutting-edge acoustic science with clinical expertise.
           </p>

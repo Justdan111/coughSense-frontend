@@ -2,13 +2,14 @@
 
 import { Activity, Menu, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { HistoryDialog } from "@/components/history-dialog"
 import { motion, AnimatePresence } from "framer-motion"
 import { useState } from "react"
 import Link from "next/link"
+import { useAuth } from "@/hooks/use-auth"
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const { user, logout } = useAuth() // added logout
 
   return (
     <header className="border-b bg-white/80 backdrop-blur-md sticky top-0 z-50">
@@ -17,34 +18,51 @@ export function Header() {
           <div className="bg-brand-teal p-1.5 rounded-lg">
             <Activity className="w-5 h-5 text-white" />
           </div>
-          <span className="font-bold text-lg md:text-xl tracking-tight text-slate-900">CoughTriage AI</span>
+          <span className="font-bold text-lg md:text-xl tracking-tight text-slate-900">CoughSense</span>
         </Link>
 
+        {/* Desktop navigation with improved spacing and conditional auth links */}
         <nav className="hidden md:flex items-center gap-6">
-          <a href="#how-it-works" className="text-sm font-medium text-slate-600 hover:text-brand-teal transition-colors">
+          <a
+            href="#how-it-works"
+            className="text-sm font-medium text-slate-600 hover:text-brand-teal transition-colors"
+          >
             How it works
           </a>
           <a href="#features" className="text-sm font-medium text-slate-600 hover:text-brand-teal transition-colors">
             Features
           </a>
-          <a href="#research" className="text-sm font-medium text-slate-600 hover:text-brand-teal transition-colors">
-            Research
-          </a>
-          <Button size="sm" className="bg-brand-teal hover:bg-brand-teal/90" asChild>
-            <Link href="/dashboard">Get Started</Link>
-          </Button>
+          {user ? (
+            <>
+              <Button size="sm" variant="ghost" className="text-slate-600" asChild>
+                <Link href="/dashboard">Dashboard</Link>
+              </Button>
+              <Button size="sm" variant="outline" className="border-slate-200 bg-transparent" onClick={logout}>
+                Sign Out
+              </Button>
+            </>
+          ) : (
+            <>
+              <Link
+                href="/auth/login"
+                className="text-sm font-medium text-slate-600 hover:text-brand-teal transition-colors"
+              >
+                Log in
+              </Link>
+              <Button size="sm" className="bg-brand-teal hover:bg-brand-teal/90" asChild>
+                <Link href="/auth/login">Get Started</Link>
+              </Button>
+            </>
+          )}
         </nav>
 
-        <Button
-          variant="ghost"
-          size="icon"
-          className="md:hidden"
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-        >
+        {/* Mobile menu toggle button */}
+        <Button variant="ghost" size="icon" className="md:hidden" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
           {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
         </Button>
       </div>
 
+      {/* Mobile menu dropdown with Framer Motion and conditional auth links */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
@@ -69,16 +87,46 @@ export function Header() {
               >
                 Features
               </a>
-              <a
-                href="#research"
-                className="text-base font-medium text-slate-600 hover:text-brand-teal transition-colors py-2"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Research
-              </a>
-              <Button className="bg-brand-teal hover:bg-brand-teal/90 w-full mt-2" asChild>
-                <Link href="/dashboard">Get Started</Link>
-              </Button>
+              {user ? (
+                <>
+                  <Button
+                    className="w-full justify-start"
+                    variant="ghost"
+                    asChild
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <Link href="/dashboard">Dashboard</Link>
+                  </Button>
+                  <Button
+                    className="w-full bg-transparent"
+                    variant="outline"
+                    onClick={() => {
+                      logout()
+                      setMobileMenuOpen(false)
+                    }}
+                  >
+                    Sign Out
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button
+                    variant="ghost"
+                    className="w-full justify-start"
+                    asChild
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <Link href="/auth/login">Log in</Link>
+                  </Button>
+                  <Button
+                    className="bg-brand-teal hover:bg-brand-teal/90 w-full mt-2"
+                    asChild
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <Link href="/auth/login">Get Started</Link>
+                  </Button>
+                </>
+              )}
             </nav>
           </motion.div>
         )}

@@ -9,7 +9,7 @@ export function Footer() {
           <div className="sm:col-span-2">
             <div className="flex items-center gap-2 mb-4 md:mb-6 text-white">
               <Activity className="w-6 h-6 text-brand-teal" />
-              <span className="font-bold text-lg md:text-xl">CoughTriage AI</span>
+              <span className="font-bold text-lg md:text-xl">CoughSense</span>
             </div>
             <p className="max-w-sm leading-relaxed text-slate-400 text-sm md:text-base">
               Advancing respiratory healthcare through acoustic AI. Our mission is to provide accessible, clinical-grade
@@ -58,7 +58,7 @@ export function Footer() {
           </div>
         </div>
         <div className="pt-6 md:pt-8 border-t border-slate-800 text-xs md:text-sm text-slate-500 flex flex-col md:flex-row justify-between items-center gap-3 md:gap-4 text-center md:text-left">
-          <p>© 2025 CoughTriage AI. All rights reserved.</p>
+          <p>© 2025 CoughSense. All rights reserved.</p>
           <p className="italic">For informational purposes only. Not a medical diagnosis.</p>
         </div>
       </div>
