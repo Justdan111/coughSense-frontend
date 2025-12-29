@@ -21,12 +21,17 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(() => {
-    const storedUser = localStorage.getItem("cough_triage_user")
-    return storedUser ? JSON.parse(storedUser) : null
-  })
-  const [isLoading, setIsLoading] = useState(false)
+  const [user, setUser] = useState<User | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
   const router = useRouter()
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("cough_triage_user")
+    if (storedUser) {
+      setUser(JSON.parse(storedUser))
+    }
+    setIsLoading(false)
+  }, [])
 
   const login = async (email: string, _password: string) => {
     setIsLoading(true)

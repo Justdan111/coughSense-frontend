@@ -42,7 +42,7 @@ export function LandingHero() {
               asChild
               className="bg-brand-teal hover:bg-brand-teal/90 text-base sm:text-lg h-12 sm:h-14 px-6 sm:px-8 w-full sm:w-auto"
             >
-              <Link href={user ? "/dashboard" : "/auth/login"}>{user ? "Go to Dashboard" : "Get Started Free"}</Link>
+              <Link href={user ? "/dashboard" : "/login"}>{user ? "Go to Dashboard" : "Get Started Free"}</Link>
             </Button>
             <Button
               size="lg"
