@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import {
   Dialog,
   DialogContent,
@@ -21,39 +21,39 @@ interface Assessment {
   confidence: number
 }
 
-export function HistoryDialog() {
-  const [history, setHistory] = useState<Assessment[]>([])
+const getDefaultMockData = (): Assessment[] => [
+  {
+    id: "1",
+    date: new Date(Date.now() - 86400000).toISOString(),
+    condition: "Acute Bronchitis",
+    severity: "Moderate",
+    confidence: 68,
+  },
+  {
+    id: "2",
+    date: new Date(Date.now() - 172800000).toISOString(),
+    condition: "Common Cold",
+    severity: "Low",
+    confidence: 82,
+  },
+]
 
-  useEffect(() => {
+export function HistoryDialog() {
+  const [history, setHistory] = useState<Assessment[]>(() => {
     const saved = localStorage.getItem("cough_triage_history")
     if (saved) {
       try {
-        setHistory(JSON.parse(saved))
+        return JSON.parse(saved)
       } catch (e) {
         console.error("[v0] Error parsing history:", e)
+        return getDefaultMockData()
       }
     } else {
-      // Mock data for initial view if empty
-      const mockData = [
-        {
-          id: "1",
-          date: new Date(Date.now() - 86400000).toISOString(),
-          condition: "Acute Bronchitis",
-          severity: "Moderate",
-          confidence: 68,
-        },
-        {
-          id: "2",
-          date: new Date(Date.now() - 172800000).toISOString(),
-          condition: "Common Cold",
-          severity: "Low",
-          confidence: 82,
-        },
-      ]
-      setHistory(mockData)
+      const mockData = getDefaultMockData()
       localStorage.setItem("cough_triage_history", JSON.stringify(mockData))
+      return mockData
     }
-  }, [])
+  })
 
   const clearHistory = () => {
     localStorage.removeItem("cough_triage_history")
@@ -75,7 +75,7 @@ export function HistoryDialog() {
           History
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-106.25">
         <DialogHeader>
           <div className="flex items-center justify-between">
             <DialogTitle>Assessment History</DialogTitle>

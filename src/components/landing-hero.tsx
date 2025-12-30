@@ -6,7 +6,7 @@ import Link from "next/link"
 import { useAuth } from "@/hooks/use-auth"
 
 export function LandingHero() {
-  const { user } = useAuth() // get auth state
+  const { user } = useAuth() 
 
   return (
     <section className="relative overflow-hidden py-12 px-4 sm:py-16 md:py-20 lg:py-32">

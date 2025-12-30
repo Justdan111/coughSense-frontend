@@ -5,7 +5,7 @@ import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
 import { motion } from "framer-motion"
 
-export function SymptomsForm({ onComplete }: { onComplete: (data: any) => void }) {
+export function SymptomsForm({ onComplete }: { onComplete: (data: Record<string, unknown>) => void }) {
   const symptoms = [
     "Fever",
     "Shortness of breath",

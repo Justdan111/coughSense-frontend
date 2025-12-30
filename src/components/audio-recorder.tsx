@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef, useEffect } from "react"
+import { useState, useRef, useEffect, useMemo } from "react"
 import { Mic, Square, Upload, Play, Trash2, Pause } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { motion } from "framer-motion"
@@ -17,6 +17,7 @@ export function AudioRecorder({ onComplete }: { onComplete: (blob: Blob) => void
   const audioChunksRef = useRef<Blob[]>([])
   const timerRef = useRef<NodeJS.Timeout | null>(null)
   const audioRef = useRef<HTMLAudioElement | null>(null)
+  const [barHeights] = useState(() => Array.from({ length: 12 }, () => Math.random() * 20 + 10))
 
   useEffect(() => {
     return () => {
@@ -163,7 +164,7 @@ export function AudioRecorder({ onComplete }: { onComplete: (blob: Blob) => void
                 key={i}
                 className="w-1 bg-red-500 rounded-full animate-pulse"
                 style={{
-                  height: `${Math.random() * 20 + 10}px`,
+                  height: `${barHeights[i]}px`,
                   animationDelay: `${i * 0.1}s`,
                 }}
               />

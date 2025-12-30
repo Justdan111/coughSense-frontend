@@ -12,10 +12,14 @@ import { Stepper } from "./ui/stepper"
 
 export type TriageStep = "audio" | "symptoms" | "analyzing" | "results"
 
+export interface SymptomsData {
+  [key: string]: string | boolean | number
+}
+
 export function TriageFlow() {
   const [step, setStep] = useState<TriageStep>("audio")
   const [audioData, setAudioData] = useState<Blob | null>(null)
-  const [symptoms, setSymptoms] = useState<any>(null)
+  const [symptoms, setSymptoms] = useState<SymptomsData | null>(null)
 
   const steps = [
     { id: "audio", label: "Audio Sample" },
@@ -31,7 +35,7 @@ export function TriageFlow() {
     setStep("symptoms")
   }
 
-  const handleSymptomsComplete = (data: any) => {
+  const handleSymptomsComplete = (data: SymptomsData) => {
     setSymptoms(data)
     setStep("analyzing")
     // Simulation: transition to results after 3 seconds
@@ -48,7 +52,7 @@ export function TriageFlow() {
     <div className="max-w-2xl mx-auto w-full space-y-6 md:space-y-8">
       <Stepper steps={steps} currentStep={currentStepIndex} />
 
-      <Card className="p-4 sm:p-6 md:p-8 border-none shadow-xl bg-white min-h-[450px] sm:min-h-[500px] flex flex-col justify-center">
+      <Card className="p-4 sm:p-6 md:p-8 border-none shadow-xl bg-white min-h-112.5 sm:min-h-125 flex flex-col justify-center">
         <AnimatePresence mode="wait">
           {step === "audio" && (
             <motion.div
@@ -72,7 +76,7 @@ export function TriageFlow() {
               exit="exit"
               transition={{ duration: 0.3 }}
             >
-              <SymptomsForm onComplete={handleSymptomsComplete} />
+              <SymptomsForm onComplete={handleSymptomsComplete as (data: Record<string, unknown>) => void} />
             </motion.div>
           )}
 
