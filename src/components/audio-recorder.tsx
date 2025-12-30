@@ -17,6 +17,7 @@ export function AudioRecorder({ onComplete }: { onComplete: (blob: Blob) => void
   const audioChunksRef = useRef<Blob[]>([])
   const timerRef = useRef<NodeJS.Timeout | null>(null)
   const audioRef = useRef<HTMLAudioElement | null>(null)
+  const fileInputRef = useRef<HTMLInputElement | null>(null)
   const [barHeights] = useState(() => Array.from({ length: 12 }, () => Math.random() * 20 + 10))
 
   useEffect(() => {
@@ -96,6 +97,33 @@ export function AudioRecorder({ onComplete }: { onComplete: (blob: Blob) => void
     const mins = Math.floor(seconds / 60)
     const secs = seconds % 60
     return `${mins}:${secs.toString().padStart(2, "0")}`
+  }
+
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (!file) return
+
+    // Validate file size (max 50MB)
+    const maxSize = 50 * 1024 * 1024
+    if (file.size > maxSize) {
+      setError("File size must be less than 50MB.")
+      return
+    }
+
+    try {
+      const blob = new Blob([file], { type: file.type })
+      setRecordedBlob(blob)
+      const url = URL.createObjectURL(blob)
+      setAudioUrl(url)
+      setError(null)
+    } catch (err) {
+      console.error("Error loading file:", err)
+      setError("Failed to load the audio file. Please try again.")
+    }
+  }
+
+  const triggerFileInput = () => {
+    fileInputRef.current?.click()
   }
 
   return (
@@ -183,11 +211,19 @@ export function AudioRecorder({ onComplete }: { onComplete: (blob: Blob) => void
               <span className="bg-white px-2 text-muted-foreground">Or upload a file</span>
             </div>
           </div>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="audio/*"
+            onChange={handleFileUpload}
+            className="hidden"
+          />
           <Button
+            onClick={triggerFileInput}
             variant="ghost"
             className="w-full border-dashed border-2 h-14 sm:h-16 hover:bg-slate-50 text-slate-500 text-sm sm:text-base"
           >
-            <Upload className="w-5 h-5 mr-2" /> Select WAV or MP3
+            <Upload className="w-5 h-5 mr-2" /> Select Audio File
           </Button>
         </div>
       )}
