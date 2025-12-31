@@ -6,15 +6,17 @@ import { Badge } from "@/components/ui/badge"
 import { Calendar, ChevronRight, Clock } from "lucide-react"
 import { motion } from "framer-motion"
 
-export default function HistoryPage() {
-  const [history, setHistory] = useState<any[]>([])
+interface HistoryItem {
+  date: string
+  confidence: number
+  severity: "High" | "Moderate" | "Low"
+}
 
-  useEffect(() => {
+export default function HistoryPage() {
+  const [history, setHistory] = useState<HistoryItem[]>(() => {
     const saved = localStorage.getItem("cough_triage_history")
-    if (saved) {
-      setHistory(JSON.parse(saved).reverse())
-    }
-  }, [])
+    return saved ? JSON.parse(saved).reverse() : []
+  })
 
   return (
     <div className="space-y-6 md:space-y-8">
