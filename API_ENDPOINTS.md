@@ -20,8 +20,7 @@ Create a new user account.
 ```json
 {
   "email": "string",
-  "password": "string",
-  "name": "string"
+  "password": "string"
 }
 ```
 
@@ -30,8 +29,7 @@ Create a new user account.
 {
   "user": {
     "id": "string",
-    "email": "string",
-    "name": "string"
+    "email": "string"
   },
   "token": "string"
 }
@@ -61,8 +59,7 @@ Authenticate a user and receive an access token.
 {
   "user": {
     "id": "string",
-    "email": "string",
-    "name": "string"
+    "email": "string"
   },
   "token": "string"
 }
@@ -111,8 +108,7 @@ Authorization: Bearer <token>
 {
   "user": {
     "id": "string",
-    "email": "string",
-    "name": "string"
+    "email": "string"
   }
 }
 ```
@@ -164,9 +160,9 @@ symptoms: JSON string
   "confidence": 68,
   "recommendations": [
     "Rest and stay hydrated",
-    "Schedule a non-urgent telehealth appointment",
     "Monitor for shortness of breath or high fever (>102°F)",
-    "Isolate from others if you suspect a viral infection"
+    "Isolate from others if you suspect a viral infection",
+    "Consult a healthcare professional if symptoms worsen"
   ],
   "detailedAnalysis": {
     "audioFeatures": {
@@ -314,7 +310,7 @@ Authorization: Bearer <token>
 ### 9. Get User Profile
 **GET** `/user/profile`
 
-Retrieve the current user's profile information.
+Retrieve the current user's account information.
 
 **Headers:**
 ```
@@ -325,15 +321,7 @@ Authorization: Bearer <token>
 ```json
 {
   "id": "string",
-  "name": "John Doe",
   "email": "john.doe@example.com",
-  "phone": "+1 (555) 000-0000",
-  "dateOfBirth": "1990-01-01",
-  "medicalHistory": {
-    "allergies": ["string"],
-    "conditions": ["string"],
-    "medications": ["string"]
-  },
   "createdAt": "2025-01-01T00:00:00Z",
   "updatedAt": "2025-12-29T10:30:00Z"
 }
@@ -347,7 +335,7 @@ Authorization: Bearer <token>
 ### 10. Update User Profile
 **PUT** `/user/profile`
 
-Update the current user's profile information.
+Update the current user's account information.
 
 **Headers:**
 ```
@@ -358,10 +346,8 @@ Content-Type: application/json
 **Request Body:**
 ```json
 {
-  "name": "string",
   "email": "string",
-  "phone": "string",
-  "dateOfBirth": "1990-01-01"
+  "password": "string" (optional - only if changing password)
 }
 ```
 
@@ -370,10 +356,7 @@ Content-Type: application/json
 {
   "user": {
     "id": "string",
-    "name": "John Doe",
-    "email": "john.doe@example.com",
-    "phone": "+1 (555) 000-0000",
-    "dateOfBirth": "1990-01-01"
+    "email": "john.doe@example.com"
   },
   "message": "Profile updated successfully"
 }
@@ -386,110 +369,15 @@ Content-Type: application/json
 
 ---
 
-## Additional Endpoints (Future Enhancement)
-
-### 11. Find Nearby Clinics
-**GET** `/clinics/nearby`
-
-Find nearby medical clinics based on location.
-
-**Query Parameters:**
-- `lat`: Latitude (required)
-- `lng`: Longitude (required)
-- `radius`: Search radius in kilometers (optional, default: 10)
-
-**Response:** `200 OK`
-```json
-{
-  "clinics": [
-    {
-      "id": "string",
-      "name": "City Health Clinic",
-      "address": "123 Main St, City, State 12345",
-      "distance": 2.5,
-      "phone": "+1 (555) 123-4567",
-      "hours": "Mon-Fri 8:00 AM - 6:00 PM",
-      "coordinates": {
-        "lat": 40.7128,
-        "lng": -74.0060
-      }
-    }
-  ]
-}
-```
-
-**Error Responses:**
-- `400 Bad Request` - Invalid coordinates
-
 ---
 
-### 12. Schedule Telehealth Appointment
-**POST** `/telehealth/schedule`
+## ❌ Removed Endpoints (Not Part of Triage Tool)
 
-Schedule a telehealth consultation appointment.
+The following endpoints were removed as they are not aligned with a triage-focused application:
 
-**Headers:**
-```
-Authorization: Bearer <token>
-Content-Type: application/json
-```
-
-**Request Body:**
-```json
-{
-  "assessmentId": "string",
-  "preferredTime": "2025-12-30T14:00:00Z",
-  "notes": "string"
-}
-```
-
-**Response:** `201 Created`
-```json
-{
-  "appointment": {
-    "id": "string",
-    "assessmentId": "string",
-    "scheduledTime": "2025-12-30T14:00:00Z",
-    "status": "pending",
-    "meetingLink": "https://telehealth.example.com/room/abc123",
-    "notes": "string"
-  }
-}
-```
-
-**Error Responses:**
-- `400 Bad Request` - Invalid data
-- `401 Unauthorized` - Invalid or missing token
-- `404 Not Found` - Assessment not found
-
----
-
-### 13. Get Medical Advice
-**GET** `/advice`
-
-Retrieve general medical advice and tips for respiratory health.
-
-**Response:** `200 OK`
-```json
-{
-  "adviceItems": [
-    {
-      "id": "string",
-      "title": "When to seek immediate care",
-      "content": "If you experience severe difficulty breathing, persistent pain or pressure in the chest, new confusion, or inability to wake or stay awake.",
-      "category": "emergency",
-      "icon": "ShieldAlert"
-    },
-    {
-      "id": "string",
-      "title": "Managing Symptoms",
-      "content": "Stay hydrated, get plenty of rest, and use a humidifier. Over-the-counter medications may help with cough and fever relief.",
-      "category": "general",
-      "icon": "Thermometer"
-    }
-  ]
-}
-```
+- ~~`GET /clinics/nearby`~~ - Find nearby clinics (hospital feature)
+- ~~`POST /telehealth/schedule`~~ - Schedule telehealth (clinical service)
+- ~~`GET /advice`~~ - Medical advice content (static medical advice)
 
 ---
 
@@ -517,9 +405,6 @@ Retrieve general medical advice and tips for respiratory health.
 - id: UUID (primary key)
 - email: VARCHAR(255) (unique, indexed)
 - password_hash: VARCHAR(255)
-- name: VARCHAR(255)
-- phone: VARCHAR(20)
-- date_of_birth: DATE
 - created_at: TIMESTAMP
 - updated_at: TIMESTAMP
 ```
@@ -560,25 +445,30 @@ NODE_ENV=development
 
 ## Implementation Priority
 
-### Phase 1 (Core Features)
+### Phase 1 (Core Triage Features) ✅
 1. ✅ Authentication endpoints (register, login, logout, me)
 2. ✅ Analyze cough endpoint
 3. ✅ Get assessment history
 4. ✅ Get assessment details
+5. ✅ Delete assessment
 
-### Phase 2 (User Management)
-5. ✅ Get user profile
-6. ✅ Update user profile
-7. ✅ Delete assessment
+### Phase 2 (Account Management) ✅
+6. ✅ Get user profile
+7. ✅ Update user profile (email/password)
 
-### Phase 3 (Enhancement Features)
-8. ⏳ Find nearby clinics
-9. ⏳ Schedule telehealth
-10. ⏳ Medical advice endpoint
+### ❌ Removed Features
+- ~~Find nearby clinics~~ - Not part of triage tool
+- ~~Schedule telehealth~~ - Not part of triage tool
+- ~~Medical advice endpoint~~ - Not part of triage tool
 
 ---
 
 ## Notes
+
+### ⚠️ Important Disclaimer
+This API provides **triage-level risk assessment**, not medical diagnosis. All responses should include appropriate disclaimers and users should be advised to consult healthcare professionals.
+
+### Technical Notes
 - All timestamps should be in ISO 8601 format (UTC)
 - All endpoints except authentication require a valid JWT token
 - Audio files should be stored securely (AWS S3, Google Cloud Storage, etc.)
@@ -586,3 +476,4 @@ NODE_ENV=development
 - Log all API requests for debugging and monitoring
 - Consider implementing request/response compression (gzip)
 - Implement proper data encryption for sensitive information
+- All assessment responses should include disclaimers about not being medical diagnoses

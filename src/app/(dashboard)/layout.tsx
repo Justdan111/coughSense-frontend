@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import { Activity, Home, History, User, HeartPulse, LogOut, Menu } from "lucide-react"
+import { Activity, Home, History, User, LogOut, Menu } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
@@ -31,7 +31,7 @@ export default function DashboardLayout({
 
   useEffect(() => {
     if (!isLoading && !user) {
-      router.push("/auth/login")
+      router.push("/login")
     }
   }, [user, isLoading, router])
 
