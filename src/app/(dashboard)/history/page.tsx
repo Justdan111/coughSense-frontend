@@ -24,7 +24,11 @@ export default function HistoryPage() {
         <h1 className="text-2xl sm:text-3xl font-bold text-slate-900">Assessment History</h1>
         <p className="text-sm sm:text-base text-slate-500 mt-1">Review your past cough analysis results.</p>
       </motion.div>
-
+      <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+        <p className="text-xs sm:text-sm text-amber-800 text-center">
+          <strong>⚠️ Reminder:</strong> These are triage-level assessments, not medical diagnoses.
+        </p>
+      </div>
       <div className="grid gap-3 md:gap-4">
         {history.length > 0 ? (
           history.map((item, index) => (

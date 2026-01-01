@@ -14,10 +14,9 @@ import { useRouter } from "next/navigation"
 import { Loader2 } from "lucide-react"
 
 const navItems = [
-  { icon: Home, label: "Home", href: "/dashboard" },
+  { icon: Home, label: "Analyze", href: "/dashboard" },
   { icon: History, label: "History", href: "/history" },
-  { icon: HeartPulse, label: "Advice", href: "/advice" },
-  { icon: User, label: "Profile", href: "/profile" },
+  { icon: User, label: "Account", href: "/profile" },
 ]
 
 export default function DashboardLayout({

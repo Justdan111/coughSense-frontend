@@ -5,23 +5,23 @@ import { motion } from "framer-motion"
 
 const features = [
   {
-    title: "Clinical Accuracy",
-    description: "Developed in collaboration with leading respiratory health institutions and clinicians.",
+    title: "Risk Assessment",
+    description: "AI analyzes your cough to estimate respiratory risk level: Low, Moderate, or High.",
     icon: Shield,
   },
   {
-    title: "Instant Results",
-    description: "Get real-time feedback on your respiratory health in less than 30 seconds.",
+    title: "Instant Analysis",
+    description: "Get results in seconds with confidence scores between 60-75%.",
     icon: Zap,
   },
   {
     title: "Privacy First",
-    description: "Your audio data is encrypted and never stored without your explicit consent.",
+    description: "Your audio data is encrypted and processed securely.",
     icon: Lock,
   },
   {
-    title: "Global Reach",
-    description: "Accessible anywhere in the world, helping bridge the gap in respiratory triage.",
+    title: "Track History",
+    description: "View your past assessments and monitor changes over time.",
     icon: Globe,
   },
 ]
@@ -31,9 +31,9 @@ export function Features() {
     <section id="features" className="py-16 md:py-24 bg-white px-4">
       <div className="container mx-auto">
         <div className="text-center mb-12 md:mb-16">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 md:mb-4">Why CoughSense?</h2>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 md:mb-4">Key Features</h2>
           <p className="text-slate-600 max-w-2xl mx-auto text-sm sm:text-base leading-relaxed">
-            Our platform combines cutting-edge acoustic science with clinical expertise.
+            Simple, fast triage assessment powered by machine learning.
           </p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 max-w-6xl mx-auto">

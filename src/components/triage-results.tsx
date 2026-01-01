@@ -1,6 +1,6 @@
 "use client"
 
-import { AlertTriangle, ChevronRight, Phone, MapPin, RefreshCcw, FileText, Share2, Info } from "lucide-react"
+import { AlertTriangle, RefreshCcw, Share2, Info } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import { Badge } from "@/components/ui/badge"
@@ -104,22 +104,11 @@ export function TriageResults({ onReset }: { onReset: () => void }) {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="grid grid-cols-2 gap-3 md:gap-4"
+          className="bg-amber-50 border border-amber-200 rounded-xl p-4"
         >
-          <Button
-            variant="outline"
-            className="h-auto py-3 md:py-4 flex-col gap-2 rounded-2xl border-slate-200 bg-white hover:bg-slate-50 transition-all shadow-sm"
-          >
-            <Phone className="w-4 h-4 sm:w-5 sm:h-5 text-brand-blue" />
-            <div className="text-xs font-semibold">Telehealth</div>
-          </Button>
-          <Button
-            variant="outline"
-            className="h-auto py-3 md:py-4 flex-col gap-2 rounded-2xl border-slate-200 bg-white hover:bg-slate-50 transition-all shadow-sm"
-          >
-            <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-red-500" />
-            <div className="text-xs font-semibold">Nearby Clinics</div>
-          </Button>
+          <p className="text-xs sm:text-sm text-amber-800">
+            <strong>⚠️ Important:</strong> This is a triage-level assessment, not a medical diagnosis. Please consult a healthcare professional for proper medical advice.
+          </p>
         </motion.div>
       </div>
 
@@ -129,22 +118,15 @@ export function TriageResults({ onReset }: { onReset: () => void }) {
         transition={{ delay: 0.5 }}
         className="pt-2 md:pt-4 flex flex-col gap-3 px-4 sm:px-0"
       >
-        <Button className="w-full h-12 sm:h-auto sm:py-6 bg-slate-900 hover:bg-slate-800 rounded-xl flex justify-between px-6 sm:px-8 shadow-lg transition-transform active:scale-[0.98] text-sm sm:text-base">
-          <span className="flex items-center gap-2">
-            <FileText className="w-4 h-4" />
-            View Full Clinical Report
-          </span>
-          <ChevronRight className="w-5 h-5" />
-        </Button>
         <div className="flex gap-2">
           <Button
-            variant="ghost"
+            variant="outline"
             onClick={onReset}
-            className="flex-1 text-slate-500 hover:text-brand-teal text-sm sm:text-base h-11 sm:h-auto"
+            className="flex-1 text-slate-600 border-slate-200 hover:bg-slate-50 text-sm sm:text-base h-11 sm:h-auto"
           >
-            <RefreshCcw className="w-4 h-4 mr-2" /> Start New Assessment
+            <RefreshCcw className="w-4 h-4 mr-2" /> New Assessment
           </Button>
-          <Button variant="ghost" className="text-slate-500 hover:text-slate-900 px-3 h-11 sm:h-auto">
+          <Button variant="outline" className="text-slate-600 border-slate-200 hover:bg-slate-50 px-3 h-11 sm:h-auto">
             <Share2 className="w-4 h-4" />
           </Button>
         </div>

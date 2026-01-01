@@ -5,18 +5,18 @@ import { motion } from "framer-motion"
 
 const steps = [
   {
-    title: "Record Audio",
-    description: "Simply record a 5-second cough sample using your phone or computer's microphone.",
+    title: "Record or Upload",
+    description: "Record your cough using your device's microphone or upload an audio file.",
     icon: Mic,
   },
   {
-    title: "AI Processing",
-    description: "Our acoustic AI models analyze thousands of features to identify respiratory patterns.",
+    title: "AI Analysis",
+    description: "Machine learning models analyze audio patterns and symptoms to assess risk.",
     icon: BarChart3,
   },
   {
-    title: "Get Triage",
-    description: "Receive immediate clinical guidance and next-step care recommendations.",
+    title: "View Risk Level",
+    description: "Receive your risk assessment (Low/Moderate/High) with confidence score and recommendations.",
     icon: Stethoscope,
   },
 ]
@@ -28,7 +28,7 @@ export function HowItWorks() {
         <div className="text-center mb-12 md:mb-16">
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 md:mb-4">How it Works</h2>
           <p className="text-slate-600 max-w-2xl mx-auto text-sm sm:text-base leading-relaxed">
-            Our technology uses deep learning to transform acoustic signals into clinical insights.
+            Three simple steps to get your cough risk assessment.
           </p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8 max-w-5xl mx-auto">

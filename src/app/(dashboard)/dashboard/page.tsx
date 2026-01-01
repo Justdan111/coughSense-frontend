@@ -4,8 +4,14 @@ export default function DashboardHome() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-slate-900">Health Assessment</h1>
-        <p className="text-slate-500">Record a new cough sample for AI analysis.</p>
+        <h1 className="text-3xl font-bold text-slate-900">Cough Analysis</h1>
+        <p className="text-slate-500">Record or upload your cough for AI risk assessment.</p>
+      </div>
+
+      <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-4">
+        <p className="text-sm text-amber-800 text-center">
+          <strong>⚠️ Disclaimer:</strong> This tool provides triage-level insights, not medical diagnosis. Always consult a healthcare professional for medical advice.
+        </p>
       </div>
 
       <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-8">

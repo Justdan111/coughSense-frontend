@@ -11,7 +11,6 @@ export default function LoginPage() {
   const [isLogin, setIsLogin] = useState(true)
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
-  const [name, setName] = useState("")
   const { login, signup, isLoading } = useAuth()
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -19,7 +18,7 @@ export default function LoginPage() {
     if (isLogin) {
       await login(email, password)
     } else {
-      await signup(email, password, name)
+      await signup(email, password, email.split('@')[0]) // Use email prefix as name
     }
   }
 
@@ -27,28 +26,15 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle>{isLogin ? "Welcome back" : "Create an account"}</CardTitle>
+          <CardTitle>{isLogin ? "Welcome back" : "Create account"}</CardTitle>
           <CardDescription>
             {isLogin
-              ? "Enter your credentials to access your account"
-              : "Sign up to start using Cough Sense"}
+              ? "Sign in to access your cough analysis history"
+              : "Sign up to start using CoughSense"}
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
-            {!isLogin && (
-              <div className="space-y-2">
-                <Label htmlFor="name">Name</Label>
-                <input
-                  id="name"
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  required={!isLogin}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
-                />
-              </div>
-            )}
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <input

@@ -12,8 +12,7 @@ export function Footer() {
               <span className="font-bold text-lg md:text-xl">CoughSense</span>
             </div>
             <p className="max-w-sm leading-relaxed text-slate-400 text-sm md:text-base">
-              Advancing respiratory healthcare through acoustic AI. Our mission is to provide accessible, clinical-grade
-              triage to everyone, everywhere.
+              AI-powered cough triage tool for early respiratory risk awareness. Providing accessible risk assessment to help you make informed health decisions.
             </p>
           </div>
           <div>
@@ -25,13 +24,13 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="#research" className="hover:text-brand-teal transition-colors">
-                  Research
+                <Link href="/privacy" className="hover:text-brand-teal transition-colors">
+                  Privacy Policy
                 </Link>
               </li>
               <li>
-                <Link href="/privacy" className="hover:text-brand-teal transition-colors">
-                  Privacy Policy
+                <Link href="/terms" className="hover:text-brand-teal transition-colors">
+                  Terms of Service
                 </Link>
               </li>
             </ul>
@@ -41,17 +40,12 @@ export function Footer() {
             <ul className="space-y-2 text-sm">
               <li>
                 <Link href="/about" className="hover:text-brand-teal transition-colors">
-                  About Us
+                  About
                 </Link>
               </li>
               <li>
                 <Link href="/contact" className="hover:text-brand-teal transition-colors">
                   Contact
-                </Link>
-              </li>
-              <li>
-                <Link href="/careers" className="hover:text-brand-teal transition-colors">
-                  Careers
                 </Link>
               </li>
             </ul>
