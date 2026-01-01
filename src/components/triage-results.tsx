@@ -56,7 +56,7 @@ export function TriageResults({ onReset }: { onReset: () => void }) {
           </div>
           <h2 className="text-2xl sm:text-3xl font-bold text-slate-900">{condition}</h2>
           <p className="text-xs sm:text-sm text-slate-500 max-w-sm mx-auto leading-relaxed">
-            Based on your acoustic sample and symptoms, our AI suggests a moderate correlation with bronchitis.
+            Based on your acoustic sample and symptoms, our AI suggests a moderate risk.
           </p>
         </div>
       </motion.div>
