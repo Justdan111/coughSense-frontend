@@ -371,13 +371,6 @@ Content-Type: application/json
 
 ---
 
-## ❌ Removed Endpoints (Not Part of Triage Tool)
-
-The following endpoints were removed as they are not aligned with a triage-focused application:
-
-- ~~`GET /clinics/nearby`~~ - Find nearby clinics (hospital feature)
-- ~~`POST /telehealth/schedule`~~ - Schedule telehealth (clinical service)
-- ~~`GET /advice`~~ - Medical advice content (static medical advice)
 
 ---
 
