@@ -52,7 +52,7 @@ export function Footer() {
           </div>
         </div>
         <div className="pt-6 md:pt-8 border-t border-slate-800 text-xs md:text-sm text-slate-500 flex flex-col md:flex-row justify-between items-center gap-3 md:gap-4 text-center md:text-left">
-          <p>© 2025 CoughSense. All rights reserved.</p>
+          <p>© {new Date().getFullYear()}{" "} CoughSense. All rights reserved.</p>
           <p className="italic">For informational purposes only. Not a medical diagnosis.</p>
         </div>
       </div>
