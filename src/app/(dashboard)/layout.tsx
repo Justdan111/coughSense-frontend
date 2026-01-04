@@ -15,8 +15,8 @@ import { Loader2 } from "lucide-react"
 
 const navItems = [
   { icon: Home, label: "Analyze", href: "/dashboard" },
-  { icon: History, label: "History", href: "/history" },
-  { icon: User, label: "Account", href: "/profile" },
+  { icon: History, label: "History", href: "/dashboard/history" },
+  { icon: User, label: "Account", href: "/dashboard/profile" },
 ]
 
 export default function DashboardLayout({
