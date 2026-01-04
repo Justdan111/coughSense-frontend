@@ -35,6 +35,14 @@ api.interceptors.response.use(
       localStorage.removeItem("cough_triage_user");
       window.location.href = "/auth/login";
     }
+    
+    // Log detailed error information
+    console.error("API Error:", {
+      status: error.response?.status,
+      data: error.response?.data,
+      message: error.message,
+    });
+    
     return Promise.reject(error);
   }
 );

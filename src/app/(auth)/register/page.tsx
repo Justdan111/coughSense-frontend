@@ -10,7 +10,6 @@ import { Eye, EyeOff, AlertCircle } from "lucide-react"
 
 export default function SignupPage() {
   const [email, setEmail] = useState("")
-  const [name, setName] = useState("")
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
@@ -72,7 +71,7 @@ export default function SignupPage() {
 
     setErrors({})
     try {
-      await signup(email, password, name || email.split('@')[0])
+      await signup(email, password, email.split('@')[0])
     } catch {
       // Error is handled by context
     }
@@ -114,17 +113,6 @@ export default function SignupPage() {
             </div>
           )}
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="name">Full Name</Label>
-              <input
-                id="name"
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                disabled={isLoading}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary disabled:bg-gray-100"
-              />
-            </div>
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <input
@@ -209,7 +197,7 @@ export default function SignupPage() {
           
           <div className="mt-4 text-center text-sm">
             Already have an account?{" "}
-            <Link href="/auth/login" className="text-primary hover:underline">
+            <Link href="/login" className="text-primary hover:underline">
               Sign in
             </Link>
           </div>
