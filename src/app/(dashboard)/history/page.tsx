@@ -14,20 +14,23 @@ interface AnalysisWithTimestamp extends AnalysisResponse {
 }
 
 export default function HistoryPage() {
-  const [history, setHistory] = useState<AnalysisWithTimestamp[]>(() => {
-    // Initialize state from localStorage
-    const saved = localStorage.getItem("analysis_history")
-    if (saved) {
-      try {
-        return JSON.parse(saved)
-      } catch (error) {
-        console.error("Failed to load history", error)
-        return []
+  const [history, setHistory] = useState<AnalysisWithTimestamp[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+
+  // Load history from localStorage on mount (client-side only)
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("analysis_history")
+      if (saved) {
+        const parsed = JSON.parse(saved)
+        setHistory(parsed)
       }
+    } catch (error) {
+      console.error("Failed to load history", error)
+    } finally {
+      setIsLoading(false)
     }
-    return []
-  })
-  const [isLoading, setIsLoading] = useState(false)
+  }, [])
 
   const handleClearHistory = () => {
     if (confirm("Are you sure you want to clear your entire analysis history?")) {

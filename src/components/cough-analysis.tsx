@@ -162,6 +162,32 @@ export function CoughAnalysisComponent({ onAnalysisComplete }: CoughAnalysisComp
     fileInputRef.current?.click()
   }
 
+  // Save analysis result to localStorage
+  const saveToHistory = (result: AnalysisResponse) => {
+    try {
+      const saved = localStorage.getItem("analysis_history")
+      let history = []
+      if (saved) {
+        try {
+          history = JSON.parse(saved)
+        } catch (e) {
+          console.error("Failed to parse history:", e)
+        }
+      }
+
+      const newEntry = {
+        ...result,
+        timestamp: new Date().toISOString(),
+      }
+
+      // Add to beginning and keep only last 20 entries
+      const updatedHistory = [newEntry, ...history].slice(0, 20)
+      localStorage.setItem("analysis_history", JSON.stringify(updatedHistory))
+    } catch (err) {
+      console.error("Failed to save to history:", err)
+    }
+  }
+
   const handleAnalyze = async () => {
     if (!audioBlob) return
 
@@ -176,6 +202,10 @@ export function CoughAnalysisComponent({ onAnalysisComplete }: CoughAnalysisComp
 
       const result = await analysisService.analyzeCough(audioFile)
       setAnalysis(result)
+      
+      // Save to localStorage for history
+      saveToHistory(result)
+      
       onAnalysisComplete?.(result)
       setStep("results")
     } catch (err: Error | unknown) {

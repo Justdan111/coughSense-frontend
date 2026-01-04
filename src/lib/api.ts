@@ -94,15 +94,4 @@ export const analysisService = {
       throw new Error(message);
     }
   },
-
-  async getAnalysisHistory() {
-    try {
-      const response = await api.get("/analysis/history");
-      return response.data;
-    } catch (error: Error | unknown) {
-      const message =
-        error instanceof Error ? error.message : "Failed to fetch history";
-      throw new Error(message);
-    }
-  },
 };
