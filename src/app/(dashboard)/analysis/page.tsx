@@ -1,21 +1,10 @@
 "use client"
 
-import { ProtectedRoute } from "@/components/protected-route"
 import { CoughAnalysisComponent } from "@/components/cough-analysis"
-import { type AnalysisResponse } from "@/lib/api"
+import { ProtectedRoute } from "@/components/protected-route"
+import { TriageFlow } from "@/components/triage-flow"
 
 export default function AnalysisPage() {
-  const handleAnalysisComplete = (analysis: AnalysisResponse) => {
-    // Store in localStorage for history
-    const history = JSON.parse(localStorage.getItem("analysis_history") || "[]")
-    history.unshift({
-      ...analysis,
-      timestamp: new Date().toISOString(),
-    })
-    // Keep only last 10
-    localStorage.setItem("analysis_history", JSON.stringify(history.slice(0, 10)))
-  }
-
   return (
     <ProtectedRoute>
       <div className="space-y-8">
@@ -31,7 +20,7 @@ export default function AnalysisPage() {
         </div>
 
         <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-8">
-          <CoughAnalysisComponent onAnalysisComplete={handleAnalysisComplete} />
+          <CoughAnalysisComponent/>
         </div>
       </div>
     </ProtectedRoute>

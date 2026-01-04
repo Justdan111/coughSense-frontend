@@ -15,8 +15,8 @@ import { Loader2 } from "lucide-react"
 
 const navItems = [
   { icon: Home, label: "Analyze", href: "/dashboard" },
-  { icon: History, label: "History", href: "/dashboard/history" },
-  { icon: User, label: "Account", href: "/dashboard/profile" },
+  { icon: History, label: "History", href: "/history" },
+  { icon: User, label: "Account", href: "/profile" },
 ]
 
 export default function DashboardLayout({
@@ -31,7 +31,7 @@ export default function DashboardLayout({
 
   useEffect(() => {
     if (!isLoading && !user) {
-      router.push("/login")
+      router.push("/auth/login")
     }
   }, [user, isLoading, router])
 

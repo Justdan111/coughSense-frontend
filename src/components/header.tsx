@@ -116,14 +116,14 @@ export function Header() {
                     asChild
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    <Link href="/auth/login">Log in</Link>
+                    <Link href="/login">Log in</Link>
                   </Button>
                   <Button
                     className="bg-brand-teal hover:bg-brand-teal/90 w-full mt-2"
                     asChild
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    <Link href="/auth/login">Get Started</Link>
+                    <Link href="/login">Get Started</Link>
                   </Button>
                 </>
               )}

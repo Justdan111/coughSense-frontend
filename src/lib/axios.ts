@@ -33,7 +33,7 @@ api.interceptors.response.use(
       // Token expired or invalid
       Cookies.remove("access_token");
       localStorage.removeItem("cough_triage_user");
-      window.location.href = "/auth/login";
+      window.location.href = "/login";
     }
     
     // Log detailed error information

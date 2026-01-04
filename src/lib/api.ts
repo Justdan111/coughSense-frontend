@@ -24,7 +24,7 @@ export interface AuthResponse {
 export const authService = {
   async register(email: string, password: string, name?: string) {
     try {
-      const response = await api.post<AuthResponse>("/api/auth/register", {
+      const response = await api.post<AuthResponse>("/auth/register", {
         email,
         password,
         name: name || email.split("@")[0],
@@ -39,7 +39,7 @@ export const authService = {
 
   async login(email: string, password: string) {
     try {
-      const response = await api.post<AuthResponse>("/api/auth/login", {
+      const response = await api.post<AuthResponse>("/auth/login", {
         email,
         password,
       });
@@ -52,7 +52,7 @@ export const authService = {
 
   async getCurrentUser() {
     try {
-      const response = await api.get("/api/auth/me");
+      const response = await api.get("/auth/me");
       return response.data;
     } catch (error: Error | unknown) {
       const message =
@@ -76,7 +76,7 @@ export const analysisService = {
       formData.append("file", audioFile);
 
       const response = await api.post<AnalysisResponse>(
-        "/api/analysis/analyze",
+        "/analysis/analyze",
         formData,
         {
           headers: {
@@ -96,7 +96,7 @@ export const analysisService = {
 
   async getAnalysisHistory() {
     try {
-      const response = await api.get("/api/analysis/history");
+      const response = await api.get("/analysis/history");
       return response.data;
     } catch (error: Error | unknown) {
       const message =

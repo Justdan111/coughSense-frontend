@@ -1,7 +1,8 @@
 "use client"
 
-import { ProtectedRoute } from "@/components/protected-route"
 import { CoughAnalysisComponent } from "@/components/cough-analysis"
+import { ProtectedRoute } from "@/components/protected-route"
+import { TriageFlow } from "@/components/triage-flow"
 import { useAuth } from "@/hooks/use-auth"
 
 export default function DashboardHome() {
@@ -22,7 +23,7 @@ export default function DashboardHome() {
         </div>
 
         <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-8">
-          <CoughAnalysisComponent />
+          <CoughAnalysisComponent/>
         </div>
       </div>
     </ProtectedRoute>
