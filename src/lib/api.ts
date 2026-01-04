@@ -73,7 +73,8 @@ export const analysisService = {
   async analyzeCough(audioFile: File) {
     try {
       const formData = new FormData();
-      formData.append("file", audioFile);
+      // Use "audio" as the field name - this should match your FastAPI endpoint parameter
+      formData.append("audio", audioFile, audioFile.name);
 
       const response = await api.post<AnalysisResponse>(
         "/analysis/analyze",
