@@ -18,7 +18,6 @@ export async function POST(request: NextRequest) {
 
     console.log("Login API Route - Response status:", response.status)
     const data = await response.json()
-    console.log("Login API Route - Response data:", data)
 
     if (!response.ok) {
       return NextResponse.json(data, { status: response.status })
