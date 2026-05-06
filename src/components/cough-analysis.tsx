@@ -265,7 +265,7 @@ export function CoughAnalysisComponent({ onAnalysisComplete }: CoughAnalysisComp
     <div className="max-w-2xl mx-auto w-full space-y-6 md:space-y-8">
       <Stepper steps={steps} currentStep={currentStepIndex} />
 
-      <Card className="p-4 sm:p-6 md:p-8 border-none shadow-xl bg-white min-h-[450px] sm:min-h-[500px] flex flex-col justify-center">
+      <Card className="p-4 sm:p-6 md:p-8 border-none shadow-xl bg-white min-h-112.5 sm:min-h-125 flex flex-col justify-center">
         <AnimatePresence mode="wait">
           {/* Audio Recording Step */}
           {step === "audio" && (
@@ -281,7 +281,7 @@ export function CoughAnalysisComponent({ onAnalysisComplete }: CoughAnalysisComp
                 <div className="space-y-2 px-4">
                   <h2 className="text-xl sm:text-2xl font-semibold text-slate-900">Record your cough</h2>
                   <p className="text-sm sm:text-base text-slate-500 leading-relaxed">
-                    Please provide a sample of 3-5 distinct coughs in a quiet environment.
+                   Record one audio sample containing 3–5 separate coughs in a quiet environment.
                   </p>
                   {error && <p className="text-xs sm:text-sm text-red-500 bg-red-50 p-2 rounded-md">{error}</p>}
                 </div>
