@@ -14,24 +14,22 @@
   --primary-foreground: oklch(0.985 0 0);
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
+    /* Brand palette (clinical, calm, modern) */
+    --color-primary: #0F766E; /* Primary teal */
+    --color-secondary: #06B6D4; /* Accent blue */
+    --color-accent: #10B981; /* Success/green */
+    --color-background: #F8FAFC; /* Page background */
+    --color-surface: #FFFFFF; /* Card surface */
+    --color-text: #0F172A; /* Primary text */
+    --color-muted: #64748B; /* Muted text */
+    --color-high: #EF4444;
+    --color-medium: #F59E0B;
+    --color-low: #10B981;
+    --radius: 1rem;
+    --glass-bg: rgba(255,255,255,0.6);
+    --glass-border: rgba(15,23,42,0.06);
+    --shadow-soft: 0 8px 24px rgba(15,23,42,0.06);
+    --shadow-deep: 0 20px 40px rgba(15,23,42,0.08);
   --sidebar-primary-foreground: oklch(0.985 0 0);
   --sidebar-accent: oklch(0.97 0 0);
   --sidebar-accent-foreground: oklch(0.205 0 0);
@@ -119,6 +117,29 @@
   --color-brand-blue: #0ea5e9;
   --color-brand-soft: #f0fdfa;
 }
+
+/* Utility classes for new brand tokens and glassmorphism */
+.bg-ct-primary { background-color: var(--color-primary); }
+.text-ct-primary { color: var(--color-primary); }
+.border-ct-primary { border-color: var(--color-primary); }
+.bg-ct-surface { background-color: var(--color-surface); }
+.text-ct { color: var(--color-text); }
+.text-ct-muted { color: var(--color-muted); }
+.bg-ct-glass { background: linear-gradient(180deg, rgba(255,255,255,0.7), rgba(248,250,252,0.65)); backdrop-filter: blur(6px); border: 1px solid var(--glass-border); }
+.shadow-ct { box-shadow: var(--shadow-soft); }
+.shadow-ct-deep { box-shadow: var(--shadow-deep); }
+.rounded-ct { border-radius: 1rem; }
+.pulse-ring { position: relative; }
+.pulse-ring::after { content: ""; position: absolute; inset: -6px; border-radius: 9999px; box-shadow: 0 0 0 6px rgba(15,118,110,0.08); opacity: 0; transform: scale(0.9); transition: opacity 0.25s ease, transform 0.25s ease; }
+.pulse-ring.active::after { opacity: 1; transform: scale(1); }
+
+/* Risk colors */
+.bg-risk-low { background-color: rgba(16,185,129,0.08); }
+.text-risk-low { color: var(--color-low); }
+.bg-risk-medium { background-color: rgba(245,158,11,0.08); }
+.text-risk-medium { color: var(--color-medium); }
+.bg-risk-high { background-color: rgba(239,68,68,0.08); }
+.text-risk-high { color: var(--color-high); }
 
 @layer base {
   * {

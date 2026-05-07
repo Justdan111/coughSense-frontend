@@ -37,20 +37,22 @@ export default function DashboardLayout({
 
   if (isLoading || !user) {
     return (
-      <div className="h-screen flex items-center justify-center bg-slate-50">
-        <Loader2 className="w-8 h-8 animate-spin text-brand-teal" />
+      <div className="h-screen flex items-center justify-center bg-ct-primary/5">
+        <Loader2 className="w-8 h-8 animate-spin text-ct-primary" />
       </div>
     )
   }
 
   return (
-    <div className="flex flex-col lg:flex-row h-screen bg-slate-50 overflow-hidden">
-      <div className="lg:hidden flex items-center justify-between px-4 h-16 bg-white border-b border-slate-200 sticky top-0 z-50">
-        <Link href="/dashboard" className="flex items-center gap-2">
-          <div className="bg-brand-teal p-2 rounded-xl">
-            <Activity className="w-5 h-5 text-white" />
+    <div className="flex flex-col lg:flex-row h-screen bg-ct-primary/5 overflow-hidden">
+      <div className="lg:hidden flex items-center justify-between px-4 h-16 bg-ct-glass border-b border-slate-100 sticky top-0 z-50">
+        <Link href="/dashboard" className="flex items-center gap-3">
+          <div className="w-9 h-9 rounded-lg flex items-center justify-center bg-ct-primary text-white shadow-ct">
+            <svg width="18" height="14" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+              <path d="M1 10C4 6 7 6 10 10C13 14 16 14 19 10" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
           </div>
-          <span className="font-bold text-lg tracking-tight">CoughTriage</span>
+          <span className="font-semibold text-lg tracking-tight text-ct">CoughTriage</span>
         </Link>
         <Button variant="ghost" size="icon" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
           <Menu className="w-6 h-6" />
@@ -73,16 +75,21 @@ export default function DashboardLayout({
               animate={{ x: 0 }}
               exit={{ x: -280 }}
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="fixed left-0 top-0 bottom-0 w-72 bg-white border-r border-slate-200 z-50 lg:hidden flex flex-col"
+              className="fixed left-0 top-0 bottom-0 w-60 bg-ct-glass border-r border-slate-100 z-50 lg:hidden flex flex-col"
             >
               <div className="p-6 flex items-center gap-3 border-b">
-                <div className="bg-brand-teal p-2 rounded-xl">
-                  <Activity className="w-6 h-6 text-white" />
+                <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-ct-primary text-white shadow-ct">
+                  <svg width="20" height="16" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+                    <path d="M1 10C4 6 7 6 10 10C13 14 16 14 19 10" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
                 </div>
-                <span className="font-bold text-xl tracking-tight">CoughTriage</span>
+                <div>
+                  <div className="font-semibold text-lg tracking-tight text-ct">CoughTriage</div>
+                  <div className="text-xs text-ct-muted">AI System Online</div>
+                </div>
               </div>
 
-              <nav className="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
+              <nav className="flex-1 px-3 py-6 space-y-2 overflow-y-auto">
                 {navItems.map((item) => {
                   const isActive = pathname === item.href
                   return (
@@ -91,17 +98,14 @@ export default function DashboardLayout({
                       href={item.href}
                       onClick={() => setMobileMenuOpen(false)}
                       className={cn(
-                        "flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all group relative",
+                        "flex items-center gap-3 px-3 py-3 rounded-lg text-sm font-medium transition-all group relative",
                         isActive
-                          ? "bg-brand-teal text-white shadow-lg shadow-brand-teal/20"
-                          : "text-slate-600 hover:bg-slate-50",
+                          ? "bg-ct-primary text-white shadow-lg"
+                          : "text-ct-muted hover:bg-ct-surface",
                       )}
                     >
                       <item.icon
-                        className={cn(
-                          "w-5 h-5",
-                          isActive ? "text-white" : "text-slate-400 group-hover:text-brand-teal",
-                        )}
+                        className={cn("w-5 h-5", isActive ? "text-white" : "text-slate-400 group-hover:text-ct-primary")}
                       />
                       {item.label}
                     </Link>
@@ -127,13 +131,18 @@ export default function DashboardLayout({
       <motion.aside
         initial={{ x: -280 }}
         animate={{ x: 0 }}
-        className="w-72 bg-white border-r border-slate-200 hidden lg:flex flex-col relative z-20"
+              className="w-60 bg-ct-glass border-r border-slate-100 hidden lg:flex flex-col relative z-20"
       >
         <div className="p-6 flex items-center gap-3">
-          <div className="bg-brand-teal p-2 rounded-xl">
-            <Activity className="w-6 h-6 text-white" />
+          <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-ct-primary text-white shadow-ct">
+            <svg width="20" height="16" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+              <path d="M1 10C4 6 7 6 10 10C13 14 16 14 19 10" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
           </div>
-          <span className="font-bold text-xl tracking-tight">CoughTriage</span>
+          <div>
+            <div className="font-semibold text-lg tracking-tight text-ct">CoughTriage</div>
+            <div className="text-xs text-ct-muted">AI System Online</div>
+          </div>
         </div>
 
         <nav className="flex-1 px-4 py-6 space-y-1">
@@ -144,18 +153,16 @@ export default function DashboardLayout({
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all group relative",
+                  "flex items-center gap-3 px-3 py-3 rounded-lg text-sm font-medium transition-all group relative",
                   isActive
-                    ? "bg-brand-teal text-white shadow-lg shadow-brand-teal/20"
-                    : "text-slate-600 hover:bg-slate-50",
+                    ? "bg-ct-primary text-white shadow-lg"
+                    : "text-ct-muted hover:bg-ct-surface",
                 )}
               >
-                <item.icon
-                  className={cn("w-5 h-5", isActive ? "text-white" : "text-slate-400 group-hover:text-brand-teal")}
-                />
+                <item.icon className={cn("w-5 h-5", isActive ? "text-white" : "text-slate-400 group-hover:text-ct-primary")} />
                 {item.label}
                 {isActive && (
-                  <motion.div layoutId="active-pill" className="absolute left-0 w-1 h-8 bg-white rounded-r-full" />
+                  <motion.div layoutId="active-pill" className="absolute left-0 w-1 h-8 bg-ct-surface/0 rounded-r-full" />
                 )}
               </Link>
             )

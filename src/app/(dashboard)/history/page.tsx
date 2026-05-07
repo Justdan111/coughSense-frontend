@@ -48,13 +48,13 @@ export default function HistoryPage() {
   const getRiskColor = (riskLevel: string) => {
     switch (riskLevel) {
       case "low":
-        return "bg-green-100 text-green-700 border-green-200"
+        return "bg-risk-low text-risk-low"
       case "medium":
-        return "bg-yellow-100 text-yellow-700 border-yellow-200"
+        return "bg-risk-medium text-risk-medium"
       case "high":
-        return "bg-red-100 text-red-700 border-red-200"
+        return "bg-risk-high text-risk-high"
       default:
-        return "bg-gray-100 text-gray-700 border-gray-200"
+        return "bg-ct-surface text-ct-muted"
     }
   }
 
@@ -105,9 +105,9 @@ export default function HistoryPage() {
           </div>
         </motion.div>
 
-        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
-          <p className="text-xs sm:text-sm text-amber-800 text-center">
-            <strong>⚠️ Reminder:</strong> These are triage-level assessments, not medical diagnoses.
+        <div className="bg-ct-glass rounded-lg p-4 shadow-ct">
+          <p className="text-xs sm:text-sm text-ct-muted text-center">
+            <strong>⚠️ Reminder:</strong> These are AI-assisted triage assessments and are not medical diagnoses.
           </p>
         </div>
 
@@ -120,11 +120,11 @@ export default function HistoryPage() {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: index * 0.05 }}
               >
-                <Card className="hover:border-primary transition-colors">
-                  <CardContent className="p-4 sm:p-6">
+                <Card className="hover:shadow-ct transition-shadow bg-ct-surface rounded-2xl">
+                      <CardContent className="p-4 sm:p-6">
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                       <div className="flex items-start sm:items-center gap-4 flex-1">
-                      <div className="w-12 h-12 bg-slate-50 rounded-xl flex items-center justify-center text-slate-400 shrink-0">
+                          <div className="w-12 h-12 bg-ct-glass rounded-xl flex items-center justify-center text-ct-muted shrink-0 shadow-ct">
                           <Calendar className="w-6 h-6" />
                         </div>
                         <div className="flex-1 min-w-0">

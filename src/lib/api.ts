@@ -1,4 +1,5 @@
 import api from "@/lib/axios";
+import axios from "axios";
 
 // Response types based on your FastAPI response structure
 export interface AnalysisResponse {
@@ -87,10 +88,30 @@ export const analysisService = {
       );
       return response.data;
     } catch (error: Error | unknown) {
-      const message =
-        error instanceof Error
-          ? error.message
-          : "Analysis failed. Please try again.";
+      let message = "Analysis failed. Please try again.";
+
+      if (axios.isAxiosError(error)) {
+        const detail = error.response?.data?.detail;
+        if (typeof detail === "string" && detail.trim()) {
+          message = detail;
+        } else if (Array.isArray(detail) && detail.length > 0) {
+          message = detail
+            .map((item) => {
+              if (typeof item === "string") return item;
+              if (item && typeof item === "object" && "msg" in item) {
+                return String(item.msg);
+              }
+              return null;
+            })
+            .filter(Boolean)
+            .join(" ");
+        } else if (typeof error.message === "string" && error.message.trim()) {
+          message = error.message;
+        }
+      } else if (error instanceof Error && error.message.trim()) {
+        message = error.message;
+      }
+
       throw new Error(message);
     }
   },

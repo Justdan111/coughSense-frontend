@@ -245,13 +245,13 @@ export function CoughAnalysisComponent({ onAnalysisComplete }: CoughAnalysisComp
   const getRiskColor = (riskLevel: string) => {
     switch (riskLevel) {
       case "low":
-        return { bg: "bg-green-50", text: "text-green-500", border: "border-green-200", badge: "bg-green-50 text-green-700 border-green-200" }
+        return { bg: "bg-risk-low", text: "text-risk-low", border: "border-transparent", badge: "bg-risk-low text-risk-low border-transparent" }
       case "medium":
-        return { bg: "bg-amber-50", text: "text-amber-500", border: "border-amber-200", badge: "bg-amber-50 text-amber-700 border-amber-200" }
+        return { bg: "bg-risk-medium", text: "text-risk-medium", border: "border-transparent", badge: "bg-risk-medium text-risk-medium border-transparent" }
       case "high":
-        return { bg: "bg-red-50", text: "text-red-500", border: "border-red-200", badge: "bg-red-50 text-red-700 border-red-200" }
+        return { bg: "bg-risk-high", text: "text-risk-high", border: "border-transparent", badge: "bg-risk-high text-risk-high border-transparent" }
       default:
-        return { bg: "bg-slate-50", text: "text-slate-500", border: "border-slate-200", badge: "bg-slate-50 text-slate-700 border-slate-200" }
+        return { bg: "bg-ct-surface", text: "text-ct-muted", border: "border-slate-100", badge: "bg-ct-surface text-ct-muted border-slate-100" }
     }
   }
 
@@ -262,10 +262,10 @@ export function CoughAnalysisComponent({ onAnalysisComplete }: CoughAnalysisComp
   }
 
   return (
-    <div className="max-w-2xl mx-auto w-full space-y-6 md:space-y-8">
+    <div className="max-w-3xl mx-auto w-full space-y-6 md:space-y-8 px-4">
       <Stepper steps={steps} currentStep={currentStepIndex} />
 
-      <Card className="p-4 sm:p-6 md:p-8 border-none shadow-xl bg-white min-h-112.5 sm:min-h-125 flex flex-col justify-center">
+      <Card className="p-4 sm:p-6 md:p-8 border-none bg-ct-glass rounded-ct shadow-ct-deep min-h-112.5 sm:min-h-125 flex flex-col justify-center">
         <AnimatePresence mode="wait">
           {/* Audio Recording Step */}
           {step === "audio" && (
@@ -278,27 +278,40 @@ export function CoughAnalysisComponent({ onAnalysisComplete }: CoughAnalysisComp
               transition={{ duration: 0.3 }}
             >
               <div className="flex flex-col items-center text-center space-y-6 md:space-y-8 py-2 md:py-4">
-                <div className="space-y-2 px-4">
-                  <h2 className="text-xl sm:text-2xl font-semibold text-slate-900">Record your cough</h2>
-                  <p className="text-sm sm:text-base text-slate-500 leading-relaxed">
-                   Record one audio sample containing 3–5 separate coughs in a quiet environment.
-                  </p>
+                    <div className="space-y-2 px-4">
+                    <h2 className="text-2xl sm:text-3xl font-semibold text-ct">Record your cough</h2>
+                    <p className="text-sm sm:text-base text-ct-muted leading-relaxed">
+                      Record one continuous 5–10 second sample containing 3–5 distinct coughs.
+                    </p>
                   {error && <p className="text-xs sm:text-sm text-red-500 bg-red-50 p-2 rounded-md">{error}</p>}
                 </div>
 
-                <div className="relative flex items-center justify-center">
+                <div className="relative flex flex-col items-center justify-center">
+                  {/* Waveform visual */}
+                  {!audioBlob ? (
+                    <div className="mb-6 w-full flex items-center justify-center">
+                      <div className="w-full max-w-md h-20 bg-gradient-to-b from-white/40 to-white/30 rounded-lg flex items-center justify-center shadow-inner">
+                        <div className="flex items-end gap-2 w-3/4 px-6">
+                          {barHeights.slice(0, 12).map((h, i) => (
+                            <div key={i} style={{ height: `${h}px` }} className="w-1.5 bg-ct-primary rounded-full animate-pulse" />
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  ) : null }
+
                   {!audioBlob ? (
                     <motion.button
-                      whileTap={{ scale: 0.95 }}
+                      whileTap={{ scale: 0.96 }}
                       onClick={isRecording ? stopRecording : startRecording}
-                      className={`w-28 h-28 sm:w-32 sm:h-32 rounded-full flex items-center justify-center transition-all duration-500 shadow-lg ${
-                        isRecording ? "bg-red-500 animate-pulse scale-110" : "bg-brand-teal hover:scale-105"
+                      className={`w-32 h-32 sm:w-36 sm:h-36 rounded-full flex items-center justify-center transition-all duration-500 ${
+                        isRecording ? "bg-risk-high text-white pulse-ring active" : "bg-ct-primary text-white shadow-ct"
                       }`}
                     >
                       {isRecording ? (
-                        <Square className="w-10 h-10 sm:w-12 sm:h-12 text-white" />
+                        <Square className="w-12 h-12 sm:w-14 sm:h-14 text-white" />
                       ) : (
-                        <Mic className="w-10 h-10 sm:w-12 sm:h-12 text-white" />
+                        <Mic className="w-12 h-12 sm:w-14 sm:h-14 text-white" />
                       )}
                     </motion.button>
                   ) : (
@@ -310,22 +323,19 @@ export function CoughAnalysisComponent({ onAnalysisComplete }: CoughAnalysisComp
                       <motion.button
                         whileTap={{ scale: 0.95 }}
                         onClick={togglePlayback}
-                        className="w-28 h-28 sm:w-32 sm:h-32 rounded-full bg-brand-soft flex items-center justify-center border-2 border-brand-teal/20 hover:border-brand-teal transition-all group"
+                        className="w-28 h-28 sm:w-32 sm:h-32 rounded-full bg-ct-surface flex items-center justify-center border-2 border-ct-primary/20 hover:border-ct-primary transition-all group"
                       >
                         {isPlaying ? (
-                          <Pause className="w-10 h-10 sm:w-12 sm:h-12 text-brand-teal" />
+                          <Pause className="w-10 h-10 sm:w-12 sm:h-12 text-ct-primary" />
                         ) : (
-                          <Play className="w-10 h-10 sm:w-12 sm:h-12 text-brand-teal ml-1 group-hover:scale-110 transition-transform" />
+                          <Play className="w-10 h-10 sm:w-12 sm:h-12 text-ct-primary ml-1 group-hover:scale-110 transition-transform" />
                         )}
                       </motion.button>
                       <div className="flex flex-col sm:flex-row gap-3 w-full px-4 sm:px-0">
                         <Button variant="outline" onClick={resetAudio} className="gap-2 border-slate-200 bg-transparent h-11 sm:h-10">
                           <Trash2 className="w-4 h-4" /> Retake
                         </Button>
-                        <Button
-                          onClick={handleAnalyze}
-                          className="bg-brand-teal hover:bg-brand-teal/90 h-11 sm:h-10"
-                        >
+                        <Button onClick={handleAnalyze} className="bg-ct-primary hover:opacity-95 text-white h-11 sm:h-10">
                           Analyze This Sample
                         </Button>
                       </div>
@@ -334,16 +344,16 @@ export function CoughAnalysisComponent({ onAnalysisComplete }: CoughAnalysisComp
                 </div>
 
                 {isRecording && (
-                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-center gap-3">
-                    <div className="text-xl sm:text-2xl font-mono text-red-500 font-semibold">{formatTime(duration)}</div>
-                    <div className="flex gap-1">
+                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-center gap-3 mt-4">
+                    <div className="text-xl sm:text-2xl font-mono text-risk-high font-semibold">{formatTime(duration)}</div>
+                    <div className="flex gap-2 items-end h-12">
                       {[...Array(12)].map((_, i) => (
                         <div
                           key={i}
-                          className="w-1 bg-red-500 rounded-full animate-pulse"
+                          className="w-1.5 bg-risk-high rounded-full animate-[pulse_1.2s_infinite]"
                           style={{
                             height: `${barHeights[i]}px`,
-                            animationDelay: `${i * 0.1}s`,
+                            animationDelay: `${i * 0.08}s`,
                           }}
                         />
                       ))}
@@ -355,10 +365,10 @@ export function CoughAnalysisComponent({ onAnalysisComplete }: CoughAnalysisComp
                   <div className="w-full max-w-sm px-4">
                     <div className="relative py-4">
                       <div className="absolute inset-0 flex items-center">
-                        <span className="w-full border-t" />
+                        <span className="w-full border-t border-slate-100" />
                       </div>
                       <div className="relative flex justify-center text-xs uppercase">
-                        <span className="bg-white px-2 text-muted-foreground">Or upload a file</span>
+                        <span className="bg-ct-surface px-2 text-ct-muted">Or upload a file</span>
                       </div>
                     </div>
                     <input
@@ -371,9 +381,9 @@ export function CoughAnalysisComponent({ onAnalysisComplete }: CoughAnalysisComp
                     <Button
                       onClick={triggerFileInput}
                       variant="ghost"
-                      className="w-full border-dashed border-2 h-14 sm:h-16 hover:bg-slate-50 text-slate-500 text-sm sm:text-base"
+                      className="w-full border-dashed border-2 h-14 sm:h-16 hover:bg-slate-50 text-ct-muted text-sm sm:text-base"
                     >
-                      <Upload className="w-5 h-5 mr-2" /> Select Audio File
+                      <Upload className="w-5 h-5 mr-2" /> Upload audio or drag & drop
                     </Button>
                   </div>
                 )}
@@ -392,18 +402,44 @@ export function CoughAnalysisComponent({ onAnalysisComplete }: CoughAnalysisComp
               transition={{ duration: 0.3 }}
             >
               <div className="flex flex-col items-center justify-center text-center space-y-6 py-8">
-                <div className="relative">
-                  <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-brand-soft flex items-center justify-center">
-                    <Loader2 className="w-12 h-12 sm:w-16 sm:h-16 text-brand-teal animate-spin" />
+                <div className="relative flex items-center gap-8">
+                  <div className="w-36 h-36 sm:w-44 sm:h-44 rounded-full bg-ct-surface flex items-center justify-center shadow-ct">
+                    <div className="w-20 h-20 rounded-full border-4 border-ct-primary/20 flex items-center justify-center">
+                      <div className="w-10 h-10 rounded-full bg-ct-primary animate-pulse" />
+                    </div>
                   </div>
-                  <div className="absolute inset-0 rounded-full border-4 border-brand-teal/20 animate-ping" />
+
+                  <div className="text-left max-w-md">
+                    <h2 className="text-xl sm:text-2xl font-semibold text-ct">Analyzing respiratory patterns...</h2>
+                    <p className="text-sm sm:text-base text-ct-muted max-w-sm">
+                      Spectral analysis: identifying transient glottal closures and expiratory phases. Estimated time: 1–3 seconds.
+                    </p>
+
+                    <div className="mt-4 space-y-2">
+                      <div className="flex items-center gap-3">
+                        <div className="w-3 h-3 rounded-full bg-ct-primary" />
+                        <div className="text-sm text-ct-muted">Audio validation</div>
+                        <div className="ml-auto text-sm font-medium text-ct-primary">✓</div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <div className="w-3 h-3 rounded-full bg-ct-primary" />
+                        <div className="text-sm text-ct-muted">Feature extraction</div>
+                        <div className="ml-auto text-sm font-medium text-ct-primary">✓</div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <div className="w-3 h-3 rounded-full bg-ct-primary/30 animate-pulse" />
+                        <div className="text-sm text-ct-muted">Running Random Forest classification</div>
+                        <div className="ml-auto text-sm font-medium text-ct-muted">⟳</div>
+                      </div>
+                      <div className="flex items-center gap-3 opacity-70">
+                        <div className="w-3 h-3 rounded-full border border-slate-100" />
+                        <div className="text-sm text-ct-muted">Confidence calibration</div>
+                        <div className="ml-auto text-sm text-ct-muted">○</div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div className="space-y-2">
-                  <h2 className="text-xl sm:text-2xl font-semibold text-slate-900">Analyzing your cough...</h2>
-                  <p className="text-sm sm:text-base text-slate-500 max-w-sm mx-auto">
-                    Our AI is processing your audio sample. This may take a few moments.
-                  </p>
-                </div>
+
                 <div className="w-full max-w-xs">
                   <Progress value={66} className="h-2 bg-slate-100" />
                 </div>
@@ -468,7 +504,7 @@ export function CoughAnalysisComponent({ onAnalysisComplete }: CoughAnalysisComp
                     className="p-4 md:p-5 bg-slate-50 rounded-2xl border border-slate-100 space-y-3 md:space-y-4"
                   >
                     <h3 className="text-sm sm:text-base font-semibold text-slate-900 flex items-center gap-2">
-                      <Info className="w-4 h-4 text-brand-teal" />
+                      <Info className="w-4 h-4 text-ct-primary" />
                       Recommendation
                     </h3>
                     <p className="text-sm text-slate-600">{analysis.recommendation}</p>
@@ -479,7 +515,7 @@ export function CoughAnalysisComponent({ onAnalysisComplete }: CoughAnalysisComp
                         <ul className="space-y-2 md:space-y-3">
                           {analysis.actions.map((action, i) => (
                             <li key={i} className="flex items-start gap-3 text-xs sm:text-sm text-slate-600 leading-relaxed">
-                              <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-brand-teal shrink-0" />
+                              <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-ct-primary shrink-0" />
                               {action}
                             </li>
                           ))}
