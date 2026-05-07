@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import Link from "next/link"
-import { Eye, EyeOff, AlertCircle } from "lucide-react"
+import { AlertCircle, CheckCircle2, CircleAlert, Eye, EyeOff, XCircle } from "lucide-react"
 
 export default function SignupPage() {
   const [email, setEmail] = useState("")
@@ -28,21 +28,23 @@ export default function SignupPage() {
   }
 
   const validatePassword = (password: string) => {
-    const errors: string[] = []
-    if (password.length < 8) {
-      errors.push("at least 8 characters")
+    return {
+      length: password.length >= 8,
+      uppercase: /[A-Z]/.test(password),
+      lowercase: /[a-z]/.test(password),
+      number: /[0-9]/.test(password),
     }
-    if (!/[A-Z]/.test(password)) {
-      errors.push("one uppercase letter")
-    }
-    if (!/[a-z]/.test(password)) {
-      errors.push("one lowercase letter")
-    }
-    if (!/[0-9]/.test(password)) {
-      errors.push("one number")
-    }
-    return errors
   }
+
+  const passwordChecks = validatePassword(password)
+  const passwordIssues = [
+    { key: "length", label: "At least 8 characters", passed: passwordChecks.length },
+    { key: "uppercase", label: "One uppercase letter", passed: passwordChecks.uppercase },
+    { key: "lowercase", label: "One lowercase letter", passed: passwordChecks.lowercase },
+    { key: "number", label: "One number", passed: passwordChecks.number },
+  ]
+  const passwordsMatch = confirmPassword.length > 0 && password === confirmPassword
+  const passwordsMismatch = confirmPassword.length > 0 && password !== confirmPassword
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -55,9 +57,11 @@ export default function SignupPage() {
     }
 
     // Validate password
-    const passwordErrors = validatePassword(password)
-    if (passwordErrors.length > 0) {
-      newErrors.password = `Password must contain ${passwordErrors.join(", ")}`
+    const failedPasswordRules = passwordIssues
+      .filter((rule) => !rule.passed)
+      .map((rule) => rule.label.toLowerCase())
+    if (failedPasswordRules.length > 0) {
+      newErrors.password = `Password must contain ${failedPasswordRules.join(", ")}`
     }
 
     // Validate confirm password
@@ -81,10 +85,13 @@ export default function SignupPage() {
   const handlePasswordChange = (value: string) => {
     setPassword(value)
     if (errors.password) {
-      const passwordErrors = validatePassword(value)
-      if (passwordErrors.length === 0) {
+      const nextChecks = validatePassword(value)
+      if (Object.values(nextChecks).every(Boolean)) {
         setErrors(prev => ({ ...prev, password: undefined }))
       }
+    }
+    if (errors.confirmPassword && confirmPassword && value === confirmPassword) {
+      setErrors(prev => ({ ...prev, confirmPassword: undefined }))
     }
   }
 
@@ -96,13 +103,14 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-8">
-      <Card className="w-full max-w-md">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-teal-50 via-white to-cyan-50 px-4 py-8">
+      <Card className="w-full max-w-md border-border/60 shadow-lg">
         <CardHeader>
+          <div className="mb-2 inline-flex w-fit items-center rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
+            CoughSense
+          </div>
           <CardTitle>Create account</CardTitle>
-          <CardDescription>
-            Sign up to start using CoughSense
-          </CardDescription>
+          <CardDescription>Sign up to start using CoughSense</CardDescription>
         </CardHeader>
         <CardContent>
           {error && (
@@ -166,12 +174,18 @@ export default function SignupPage() {
                   {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                 </button>
               </div>
-              {errors.password && (
+              {errors.password ? (
                 <p className="text-sm text-red-500">{errors.password}</p>
+              ) : (
+                <div className="space-y-1 text-xs">
+                  {passwordIssues.map((rule) => (
+                    <p key={rule.key} className={rule.passed ? "text-emerald-600" : "text-gray-500"}>
+                      {rule.passed ? <CheckCircle2 className="mr-1 inline-block h-3.5 w-3.5" /> : <CircleAlert className="mr-1 inline-block h-3.5 w-3.5" />}
+                      {rule.label}
+                    </p>
+                  ))}
+                </div>
               )}
-              <p className="text-xs text-gray-500">
-                Must contain at least 8 characters, including uppercase, lowercase, and a number
-              </p>
             </div>
 
             <div className="space-y-2">
@@ -197,12 +211,24 @@ export default function SignupPage() {
                   {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                 </button>
               </div>
-              {errors.confirmPassword && (
+              {errors.confirmPassword ? (
                 <p className="text-sm text-red-500">{errors.confirmPassword}</p>
-              )}
+              ) : confirmPassword.length > 0 ? (
+                <p className={`text-sm ${passwordsMatch ? "text-emerald-600" : "text-red-500"}`}>
+                  {passwordsMatch ? (
+                    <>
+                      <CheckCircle2 className="mr-1 inline-block h-4 w-4" />Passwords match
+                    </>
+                  ) : (
+                    <>
+                      <XCircle className="mr-1 inline-block h-4 w-4" />Passwords do not match
+                    </>
+                  )}
+                </p>
+              ) : null}
             </div>
 
-            <Button type="submit" className="w-full" disabled={isLoading}>
+            <Button type="submit" className="w-full bg-primary text-primary-foreground hover:bg-primary/90" disabled={isLoading}>
               {isLoading ? "Creating account..." : "Sign Up"}
             </Button>
           </form>
