@@ -46,11 +46,7 @@ export function LandingHero() {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4 sm:px-0"
           >
-            <Button
-              size="lg"
-              asChild
-              className="bg-brand-teal hover:bg-brand-teal/90 text-base sm:text-lg h-12 sm:h-14 px-6 sm:px-8 w-full sm:w-auto"
-            >
+            <Button size="lg" asChild className="bg-ct-primary hover:opacity-95 text-white text-base sm:text-lg h-12 sm:h-14 px-6 sm:px-8 w-full sm:w-auto">
               <Link href={user ? "/dashboard" : "/login"}>{user ? "Go to Dashboard" : "Get Started"}</Link>
             </Button>
             {!user && (

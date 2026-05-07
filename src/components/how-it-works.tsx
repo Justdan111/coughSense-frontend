@@ -39,10 +39,10 @@ export function HowItWorks() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.15 }}
-              className="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-100"
+              className="bg-ct-surface p-6 md:p-8 rounded-2xl shadow-ct border border-slate-100"
             >
-              <div className="w-12 h-12 bg-brand-teal/10 rounded-xl flex items-center justify-center mb-4 md:mb-6">
-                <step.icon className="w-6 h-6 text-brand-teal" />
+                <div className="w-12 h-12 bg-ct-primary/10 rounded-xl flex items-center justify-center mb-4 md:mb-6">
+                  <step.icon className="w-6 h-6 text-ct-primary" />
               </div>
               <h3 className="text-lg md:text-xl font-bold mb-2 md:mb-3">{step.title}</h3>
               <p className="text-slate-600 leading-relaxed text-sm md:text-base">{step.description}</p>

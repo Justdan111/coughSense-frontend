@@ -44,9 +44,9 @@ export function Features() {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.1 }}
-              className="p-6 rounded-2xl border border-slate-100 bg-slate-50/50 hover:bg-white hover:shadow-xl hover:shadow-brand-teal/5 transition-all"
+              className="p-6 rounded-2xl border border-slate-100 bg-ct-surface hover:shadow-ct transition-all"
             >
-              <div className="w-10 h-10 bg-brand-teal rounded-lg flex items-center justify-center mb-4 shadow-lg shadow-brand-teal/20">
+              <div className="w-10 h-10 bg-ct-primary rounded-lg flex items-center justify-center mb-4 shadow-ct">
                 <feature.icon className="w-5 h-5 text-white" />
               </div>
               <h3 className="text-base md:text-lg font-bold mb-2">{feature.title}</h3>
