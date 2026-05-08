@@ -25,7 +25,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-teal-50 via-white to-cyan-50 px-4 py-8">
+    <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-teal-50 via-white to-cyan-50 px-4 py-8">
       <Card className="w-full max-w-md border-border/60 shadow-lg">
         <CardHeader>
           <div className="mb-2 inline-flex w-fit items-center rounded-full bg-primary/10 px-3 py-1 text-lg font-medium text-primary">
