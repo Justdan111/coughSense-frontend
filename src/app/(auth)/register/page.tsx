@@ -114,18 +114,26 @@ export default function SignupPage() {
         </CardHeader>
         <CardContent>
           {error && (
-            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-md flex gap-2 items-start">
+            <div
+              data-testid="register-error"
+              className="mb-4 p-3 bg-red-50 border border-red-200 rounded-md flex gap-2 items-start"
+            >
               <AlertCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
               <div className="flex-1">
                 <p className="text-sm text-red-800">{error}</p>
               </div>
             </div>
           )}
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form
+            data-testid="register-form"
+            onSubmit={handleSubmit}
+            className="space-y-4"
+          >
             <div className="space-y-2">
               <Label htmlFor="name">Full Name</Label>
               <input
                 id="name"
+                data-testid="register-name"
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
@@ -137,6 +145,7 @@ export default function SignupPage() {
               <Label htmlFor="email">Email</Label>
               <input
                 id="email"
+                data-testid="register-email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -147,15 +156,18 @@ export default function SignupPage() {
                 }`}
               />
               {errors.email && (
-                <p className="text-sm text-red-500">{errors.email}</p>
+                <p data-testid="register-error-email" className="text-sm text-red-500">
+                  {errors.email}
+                </p>
               )}
             </div>
-            
+
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
               <div className="relative">
                 <input
                   id="password"
+                  data-testid="register-password"
                   type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => handlePasswordChange(e.target.value)}
@@ -175,11 +187,18 @@ export default function SignupPage() {
                 </button>
               </div>
               {errors.password ? (
-                <p className="text-sm text-red-500">{errors.password}</p>
+                <p data-testid="register-error-password" className="text-sm text-red-500">
+                  {errors.password}
+                </p>
               ) : (
-                <div className="space-y-1 text-xs">
+                <div data-testid="register-password-rules" className="space-y-1 text-xs">
                   {passwordIssues.map((rule) => (
-                    <p key={rule.key} className={rule.passed ? "text-emerald-600" : "text-gray-500"}>
+                    <p
+                      key={rule.key}
+                      data-testid={`register-password-rule-${rule.key}`}
+                      data-passed={rule.passed ? "true" : "false"}
+                      className={rule.passed ? "text-emerald-600" : "text-gray-500"}
+                    >
                       {rule.passed ? <CheckCircle2 className="mr-1 inline-block h-3.5 w-3.5" /> : <CircleAlert className="mr-1 inline-block h-3.5 w-3.5" />}
                       {rule.label}
                     </p>
@@ -193,6 +212,7 @@ export default function SignupPage() {
               <div className="relative">
                 <input
                   id="confirmPassword"
+                  data-testid="register-confirm"
                   type={showConfirmPassword ? "text" : "password"}
                   value={confirmPassword}
                   onChange={(e) => handleConfirmPasswordChange(e.target.value)}
@@ -212,9 +232,15 @@ export default function SignupPage() {
                 </button>
               </div>
               {errors.confirmPassword ? (
-                <p className="text-sm text-red-500">{errors.confirmPassword}</p>
+                <p data-testid="register-error-confirmPassword" className="text-sm text-red-500">
+                  {errors.confirmPassword}
+                </p>
               ) : confirmPassword.length > 0 ? (
-                <p className={`text-sm ${passwordsMatch ? "text-emerald-600" : "text-red-500"}`}>
+                <p
+                  data-testid="register-confirm-status"
+                  data-match={passwordsMatch ? "true" : "false"}
+                  className={`text-sm ${passwordsMatch ? "text-emerald-600" : "text-red-500"}`}
+                >
                   {passwordsMatch ? (
                     <>
                       <CheckCircle2 className="mr-1 inline-block h-4 w-4" />Passwords match
@@ -228,14 +254,23 @@ export default function SignupPage() {
               ) : null}
             </div>
 
-            <Button type="submit" className="w-full bg-primary text-primary-foreground hover:bg-primary/90" disabled={isLoading}>
+            <Button
+              type="submit"
+              data-testid="register-submit"
+              className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
+              disabled={isLoading}
+            >
               {isLoading ? "Creating account..." : "Sign Up"}
             </Button>
           </form>
-          
+
           <div className="mt-4 text-center text-sm">
             Already have an account?{" "}
-            <Link href="/login" className="text-primary hover:underline">
+            <Link
+              href="/login"
+              data-testid="register-login-link"
+              className="text-primary hover:underline"
+            >
               Sign in
             </Link>
           </div>

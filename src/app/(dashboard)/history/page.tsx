@@ -151,6 +151,7 @@ export default function HistoryPage() {
             </div>
             {history.length > 0 && (
               <Button
+                data-testid="history-clear-all"
                 variant="destructive"
                 size="sm"
                 onClick={handleClearHistory}
@@ -168,7 +169,7 @@ export default function HistoryPage() {
           </p>
         </div>
 
-        <div className="grid gap-3 md:gap-4">
+        <div data-testid="history-list" className="grid gap-3 md:gap-4">
           {history.length > 0 ? (
             history.map((item, index) => (
               <motion.div
@@ -176,6 +177,7 @@ export default function HistoryPage() {
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: index * 0.05 }}
+                data-testid={`history-item-${index}`}
               >
                 <Card className="hover:shadow-ct transition-shadow bg-ct-surface rounded-2xl">
                       <CardContent className="p-4 sm:p-6">
@@ -185,7 +187,10 @@ export default function HistoryPage() {
                           <Calendar className="w-6 h-6" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <h3 className="font-semibold text-sm sm:text-base text-slate-900 truncate">
+                          <h3
+                            data-testid={`history-item-${index}-summary`}
+                            className="font-semibold text-sm sm:text-base text-slate-900 truncate"
+                          >
                             {item.summary}
                           </h3>
                           <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 text-xs sm:text-sm text-slate-500 mt-2">
@@ -205,7 +210,10 @@ export default function HistoryPage() {
                               })}
                             </span>
                             <span className="hidden sm:inline">•</span>
-                            <span className="text-slate-600 font-medium">
+                            <span
+                              data-testid={`history-item-${index}-confidence`}
+                              className="text-slate-600 font-medium"
+                            >
                               Confidence: {getConfidenceValue(item).toFixed(1)}%
                             </span>
                           </div>
@@ -213,6 +221,8 @@ export default function HistoryPage() {
                       </div>
                       <div className="flex items-center justify-between sm:justify-end gap-3 sm:gap-4">
                         <Badge
+                          data-testid={`history-item-${index}-risk`}
+                          data-risk={getRiskLevel(item)}
                           className={`text-xs whitespace-nowrap flex items-center gap-1 ${getRiskColor(
                             getRiskLevel(item)
                           )}`}
@@ -221,6 +231,7 @@ export default function HistoryPage() {
                           {getRiskLevel(item).charAt(0).toUpperCase() + getRiskLevel(item).slice(1)}
                         </Badge>
                         <button
+                          data-testid={`history-item-${index}-delete`}
                           onClick={() => handleDeleteItem(index)}
                           className="text-slate-400 hover:text-red-500 transition-colors p-1 rounded hover:bg-red-50"
                           title="Delete this analysis"
@@ -234,7 +245,7 @@ export default function HistoryPage() {
               </motion.div>
             ))
           ) : (
-            <Card className="border-dashed">
+            <Card data-testid="history-empty" className="border-dashed">
               <CardContent className="p-8 sm:p-12 text-center">
                 <div className="space-y-3">
                   <p className="text-sm sm:text-base text-slate-500">

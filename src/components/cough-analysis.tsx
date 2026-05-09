@@ -280,7 +280,11 @@ export function CoughAnalysisComponent({ onAnalysisComplete }: CoughAnalysisComp
   ]
 
   return (
-    <div className="max-w-3xl mx-auto w-full space-y-6 md:space-y-8 px-4">
+    <div
+      data-testid="cough-analysis"
+      data-step={step}
+      className="max-w-3xl mx-auto w-full space-y-6 md:space-y-8 px-4"
+    >
       <Stepper steps={steps} currentStep={currentStepIndex} />
 
       <Card className="p-4 sm:p-6 md:p-8 border-none bg-ct-glass rounded-ct shadow-ct-deep min-h-112.5 sm:min-h-125 flex flex-col justify-center">
@@ -302,7 +306,14 @@ export function CoughAnalysisComponent({ onAnalysisComplete }: CoughAnalysisComp
                   <p className="text-sm sm:text-base text-ct-muted leading-relaxed">
                     Record one continuous 5–10 second sample containing 3–5 distinct coughs.
                   </p>
-                  {error && <p className="text-xs sm:text-sm text-red-500 bg-red-50 p-2 rounded-md">{error}</p>}
+                  {error && (
+                    <p
+                      data-testid="analysis-error"
+                      className="text-xs sm:text-sm text-red-500 bg-red-50 p-2 rounded-md"
+                    >
+                      {error}
+                    </p>
+                  )}
                 </div>
 
                 <div className="relative flex flex-col items-center justify-center">
@@ -321,6 +332,8 @@ export function CoughAnalysisComponent({ onAnalysisComplete }: CoughAnalysisComp
                   {!audioBlob ? (
                     <motion.button
                       whileTap={{ scale: 0.96 }}
+                      data-testid={isRecording ? "audio-stop" : "audio-record"}
+                      data-recording={isRecording ? "true" : "false"}
                       onClick={isRecording ? stopRecording : startRecording}
                       className={`w-32 h-32 sm:w-36 sm:h-36 rounded-full flex items-center justify-center transition-all duration-500 ${
                         isRecording ? "bg-risk-high text-white pulse-ring active" : "bg-ct-primary text-white shadow-ct"
@@ -340,6 +353,8 @@ export function CoughAnalysisComponent({ onAnalysisComplete }: CoughAnalysisComp
                     >
                       <motion.button
                         whileTap={{ scale: 0.95 }}
+                        data-testid="audio-playback-btn"
+                        data-playing={isPlaying ? "true" : "false"}
                         onClick={togglePlayback}
                         className="w-28 h-28 sm:w-32 sm:h-32 rounded-full bg-ct-surface flex items-center justify-center border-2 border-ct-primary/20 hover:border-ct-primary transition-all group"
                       >
@@ -350,10 +365,19 @@ export function CoughAnalysisComponent({ onAnalysisComplete }: CoughAnalysisComp
                         )}
                       </motion.button>
                       <div className="flex flex-col sm:flex-row gap-3 w-full px-4 sm:px-0">
-                        <Button variant="outline" onClick={resetAudio} className="gap-2 border-slate-200 bg-transparent h-11 sm:h-10">
+                        <Button
+                          variant="outline"
+                          data-testid="audio-retake-btn"
+                          onClick={resetAudio}
+                          className="gap-2 border-slate-200 bg-transparent h-11 sm:h-10"
+                        >
                           <Trash2 className="w-4 h-4" /> Retake
                         </Button>
-                        <Button onClick={handleAnalyzeAudio} className="bg-ct-primary hover:opacity-95 text-white h-11 sm:h-10">
+                        <Button
+                          data-testid="audio-analyze-btn"
+                          onClick={handleAnalyzeAudio}
+                          className="bg-ct-primary hover:opacity-95 text-white h-11 sm:h-10"
+                        >
                           Analyze This Sample
                         </Button>
                       </div>
@@ -386,8 +410,16 @@ export function CoughAnalysisComponent({ onAnalysisComplete }: CoughAnalysisComp
                         <span className="bg-ct-surface px-2 text-ct-muted">Or upload a file</span>
                       </div>
                     </div>
-                    <input ref={fileInputRef} type="file" accept="audio/*" onChange={handleFileUpload} className="hidden" />
+                    <input
+                      ref={fileInputRef}
+                      data-testid="audio-file-input"
+                      type="file"
+                      accept="audio/*"
+                      onChange={handleFileUpload}
+                      className="hidden"
+                    />
                     <Button
+                      data-testid="audio-upload-btn"
                       onClick={() => fileInputRef.current?.click()}
                       variant="ghost"
                       className="w-full border-dashed border-2 h-14 sm:h-16 hover:bg-slate-50 text-ct-muted text-sm sm:text-base"
@@ -416,13 +448,22 @@ export function CoughAnalysisComponent({ onAnalysisComplete }: CoughAnalysisComp
                   <p className="text-sm sm:text-base text-ct-muted leading-relaxed">
                     Select all that apply. This helps us give you a more accurate assessment.
                   </p>
-                  {error && <p className="text-xs sm:text-sm text-red-500 bg-red-50 p-2 rounded-md">{error}</p>}
+                  {error && (
+                    <p
+                      data-testid="analysis-error"
+                      className="text-xs sm:text-sm text-red-500 bg-red-50 p-2 rounded-md"
+                    >
+                      {error}
+                    </p>
+                  )}
                 </div>
 
                 <div className="space-y-3">
                   {symptomOptions.map(({ key, label, description }) => (
                     <button
                       key={key}
+                      data-testid={`symptom-${key}`}
+                      data-checked={symptoms[key] ? "true" : "false"}
                       onClick={() => toggleSymptom(key)}
                       className={`w-full text-left p-4 rounded-xl border-2 transition-all duration-200 ${
                         symptoms[key]
@@ -451,6 +492,8 @@ export function CoughAnalysisComponent({ onAnalysisComplete }: CoughAnalysisComp
 
                 <div className="pt-1 pb-1">
                   <button
+                    data-testid="symptom-consent"
+                    data-checked={symptoms.save_for_training ? "true" : "false"}
                     onClick={() => toggleSymptom("save_for_training")}
                     className="flex items-center gap-2 text-xs text-slate-400 hover:text-slate-600 transition-colors"
                   >
@@ -470,12 +513,17 @@ export function CoughAnalysisComponent({ onAnalysisComplete }: CoughAnalysisComp
                 <div className="flex gap-3 pt-2">
                   <Button
                     variant="outline"
+                    data-testid="symptom-back"
                     onClick={() => { setStep("audio"); setError(null) }}
                     className="border-slate-200 text-slate-600 h-11"
                   >
                     Back
                   </Button>
-                  <Button onClick={handleAssess} className="flex-1 bg-ct-primary hover:opacity-95 text-white h-11">
+                  <Button
+                    data-testid="symptom-submit"
+                    onClick={handleAssess}
+                    className="flex-1 bg-ct-primary hover:opacity-95 text-white h-11"
+                  >
                     Get My Results
                   </Button>
                 </div>
@@ -549,6 +597,8 @@ export function CoughAnalysisComponent({ onAnalysisComplete }: CoughAnalysisComp
               animate="animate"
               exit="exit"
               transition={{ duration: 0.3 }}
+              data-testid="results-card"
+              data-result={assessment.result}
             >
               <div className="space-y-6 md:space-y-8 py-2 md:py-4">
                 {/* Risk header */}
@@ -565,12 +615,17 @@ export function CoughAnalysisComponent({ onAnalysisComplete }: CoughAnalysisComp
                     <div className="flex justify-center gap-2">
                       <Badge
                         variant="outline"
+                        data-testid="results-risk-badge"
+                        data-risk={assessment.result}
                         className={`${getRiskColor(assessment.result).badge} uppercase tracking-wider text-xs sm:text-sm`}
                       >
                         {assessment.result === "less_risky" ? "Lower Risk" : "Higher Risk"}
                       </Badge>
                     </div>
-                    <p className="text-xs sm:text-sm text-slate-500 max-w-sm mx-auto leading-relaxed">
+                    <p
+                      data-testid="results-summary"
+                      className="text-xs sm:text-sm text-slate-500 max-w-sm mx-auto leading-relaxed"
+                    >
                       {assessment.summary}
                     </p>
                   </div>
@@ -585,7 +640,9 @@ export function CoughAnalysisComponent({ onAnalysisComplete }: CoughAnalysisComp
                 >
                   <div className="flex justify-between text-xs font-medium text-slate-500 px-1">
                     <span>Cough Detection Confidence</span>
-                    <span>{assessment.cough_confidence_pct.toFixed(1)}%</span>
+                    <span data-testid="results-confidence">
+                      {assessment.cough_confidence_pct.toFixed(1)}%
+                    </span>
                   </div>
                   <Progress value={assessment.cough_confidence_pct} className="h-2 bg-slate-100" />
                 </motion.div>
@@ -601,13 +658,19 @@ export function CoughAnalysisComponent({ onAnalysisComplete }: CoughAnalysisComp
                     <Info className="w-4 h-4 text-ct-primary" />
                     Recommendation
                   </h3>
-                  <p className="text-sm text-slate-600">{assessment.recommendation}</p>
+                  <p data-testid="results-recommendation" className="text-sm text-slate-600">
+                    {assessment.recommendation}
+                  </p>
                   {assessment.actions.length > 0 && (
                     <>
                       <h4 className="text-sm font-medium text-slate-900 pt-2">Suggested Actions</h4>
-                      <ul className="space-y-2 md:space-y-3">
+                      <ul data-testid="results-actions" className="space-y-2 md:space-y-3">
                         {assessment.actions.map((action, i) => (
-                          <li key={i} className="flex items-start gap-3 text-xs sm:text-sm text-slate-600 leading-relaxed">
+                          <li
+                            key={i}
+                            data-testid={`results-action-${i}`}
+                            className="flex items-start gap-3 text-xs sm:text-sm text-slate-600 leading-relaxed"
+                          >
                             <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-ct-primary shrink-0" />
                             {action}
                           </li>
@@ -624,7 +687,7 @@ export function CoughAnalysisComponent({ onAnalysisComplete }: CoughAnalysisComp
                   transition={{ delay: 0.4 }}
                   className={`${getRiskColor(assessment.result).bg} border ${getRiskColor(assessment.result).border} rounded-xl p-4`}
                 >
-                  <p className="text-xs sm:text-sm text-slate-800">
+                  <p data-testid="results-disclaimer" className="text-xs sm:text-sm text-slate-800">
                     <strong>⚠️ Important:</strong> {assessment.disclaimer}
                   </p>
                 </motion.div>
@@ -638,12 +701,17 @@ export function CoughAnalysisComponent({ onAnalysisComplete }: CoughAnalysisComp
                 >
                   <Button
                     variant="outline"
+                    data-testid="results-new-analysis"
                     onClick={handleReset}
                     className="flex-1 text-slate-600 border-slate-200 hover:bg-slate-50 text-sm sm:text-base h-11 sm:h-auto"
                   >
                     <RefreshCcw className="w-4 h-4 mr-2" /> New Analysis
                   </Button>
-                  <Button variant="outline" className="text-slate-600 border-slate-200 hover:bg-slate-50 px-3 h-11 sm:h-auto">
+                  <Button
+                    variant="outline"
+                    data-testid="results-share"
+                    className="text-slate-600 border-slate-200 hover:bg-slate-50 px-3 h-11 sm:h-auto"
+                  >
                     <Share2 className="w-4 h-4" />
                   </Button>
                 </motion.div>

@@ -54,7 +54,12 @@ export default function DashboardLayout({
           </div>
           <span className="font-semibold text-lg tracking-tight text-ct">CoughTriage</span>
         </Link>
-        <Button variant="ghost" size="icon" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+        <Button
+          variant="ghost"
+          size="icon"
+          data-testid="mobile-menu-toggle"
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+        >
           <Menu className="w-6 h-6" />
         </Button>
       </div>
@@ -75,6 +80,7 @@ export default function DashboardLayout({
               animate={{ x: 0 }}
               exit={{ x: -280 }}
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
+              data-testid="mobile-sidebar"
               className="fixed left-0 top-0 bottom-0 w-60 bg-ct-glass border-r border-slate-100 z-50 lg:hidden flex flex-col"
             >
               <div className="p-6 flex items-center gap-3 border-b">
@@ -96,6 +102,7 @@ export default function DashboardLayout({
                     <Link
                       key={item.href}
                       href={item.href}
+                      data-testid={`mobile-nav-${item.label.toLowerCase()}`}
                       onClick={() => setMobileMenuOpen(false)}
                       className={cn(
                         "flex items-center gap-3 px-3 py-3 rounded-lg text-sm font-medium transition-all group relative",
@@ -116,6 +123,7 @@ export default function DashboardLayout({
               <div className="p-6 border-t">
                 <Button
                   variant="ghost"
+                  data-testid="mobile-nav-logout"
                   className="w-full justify-start gap-3 text-slate-600 hover:text-red-500 hover:bg-red-50"
                   onClick={logout}
                 >
@@ -131,7 +139,8 @@ export default function DashboardLayout({
       <motion.aside
         initial={{ x: -280 }}
         animate={{ x: 0 }}
-              className="w-60 bg-ct-glass border-r border-slate-100 hidden lg:flex flex-col relative z-20"
+        data-testid="sidebar"
+        className="w-60 bg-ct-glass border-r border-slate-100 hidden lg:flex flex-col relative z-20"
       >
         <div className="p-6 flex items-center gap-3">
           <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-ct-primary text-white shadow-ct">
@@ -152,6 +161,8 @@ export default function DashboardLayout({
               <Link
                 key={item.href}
                 href={item.href}
+                data-testid={`nav-${item.label.toLowerCase()}`}
+                data-active={isActive ? "true" : "false"}
                 className={cn(
                   "flex items-center gap-3 px-3 py-3 rounded-lg text-sm font-medium transition-all group relative",
                   isActive
@@ -172,6 +183,7 @@ export default function DashboardLayout({
         <div className="p-6 border-t">
           <Button
             variant="ghost"
+            data-testid="nav-logout"
             className="w-full justify-start gap-3 text-slate-600 hover:text-red-500 hover:bg-red-50"
             onClick={logout}
           >

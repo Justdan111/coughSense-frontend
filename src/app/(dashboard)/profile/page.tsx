@@ -109,24 +109,38 @@ export default function ProfilePage() {
                 <Label className="text-sm text-ct-muted">Your Name</Label>
                 <div className="flex gap-3">
                   <input
+                    data-testid="profile-name"
                     value={nameInput}
                     onChange={(e) => setNameInput(e.target.value)}
                     placeholder="Your name"
                     className="px-3 py-2 bg-ct-glass rounded-md text-sm w-full border border-slate-100"
                   />
-                  <Button onClick={handleSaveName} disabled={saveLoading} className="h-10 sm:h-11">
+                  <Button
+                    data-testid="profile-save"
+                    onClick={handleSaveName}
+                    disabled={saveLoading}
+                    className="h-10 sm:h-11"
+                  >
                     {saveLoading ? "Saving..." : "Save Name"}
                   </Button>
                 </div>
-                {saveMessage && <p className="text-sm text-ct-primary mt-1">{saveMessage}</p>}
+                {saveMessage && (
+                  <p data-testid="profile-save-success" className="text-sm text-ct-primary mt-1">
+                    {saveMessage}
+                  </p>
+                )}
               </div>
               <div className="space-y-2">
                 <Label className="text-sm text-ct-muted">Email Address</Label>
-                <p className="px-3 py-2 bg-ct-glass rounded-md text-sm font-medium text-ct">{user?.email}</p>
+                <p data-testid="profile-email" className="px-3 py-2 bg-ct-glass rounded-md text-sm font-medium text-ct">
+                  {user?.email}
+                </p>
               </div>
               <div className="space-y-2">
                 <Label className="text-sm text-ct-muted">User ID</Label>
-                <p className="px-3 py-2 bg-ct-glass rounded-md text-xs font-medium font-mono text-ct">{user?.id}</p>
+                <p data-testid="profile-user-id" className="px-3 py-2 bg-ct-glass rounded-md text-xs font-medium font-mono text-ct">
+                  {user?.id}
+                </p>
               </div>
             </CardContent>
           </Card>
@@ -159,6 +173,7 @@ export default function ProfilePage() {
                 </div>
                 <div>
                   <input
+                    data-testid="profile-consent"
                     type="checkbox"
                     checked={consent}
                     onChange={(e) => handleToggleConsent(e.target.checked)}
@@ -183,7 +198,13 @@ export default function ProfilePage() {
             </CardHeader>
             <CardContent>
               <p className="text-sm text-ct-muted mb-4">Sign out from your account to end your current session.</p>
-              <Button onClick={handleLogout} variant="destructive" disabled={isLoading} className="h-10 sm:h-11 bg-risk-high text-white hover:opacity-95">
+              <Button
+                data-testid="profile-logout"
+                onClick={handleLogout}
+                variant="destructive"
+                disabled={isLoading}
+                className="h-10 sm:h-11 bg-risk-high text-white hover:opacity-95"
+              >
                 {isLoading ? "Signing out..." : "Sign Out"}
               </Button>
             </CardContent>

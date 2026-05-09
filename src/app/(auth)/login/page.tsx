@@ -36,18 +36,26 @@ export default function LoginPage() {
         </CardHeader>
         <CardContent>
           {error && (
-            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-md flex gap-2 items-start">
+            <div
+              data-testid="login-error"
+              className="mb-4 p-3 bg-red-50 border border-red-200 rounded-md flex gap-2 items-start"
+            >
               <AlertCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
               <div className="flex-1">
                 <p className="text-sm text-red-800">{error}</p>
               </div>
             </div>
           )}
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form
+            data-testid="login-form"
+            onSubmit={handleSubmit}
+            className="space-y-4"
+          >
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <input
                 id="email"
+                data-testid="login-email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -61,6 +69,7 @@ export default function LoginPage() {
               <div className="relative">
                 <input
                   id="password"
+                  data-testid="login-password"
                   type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -70,6 +79,7 @@ export default function LoginPage() {
                 />
                 <button
                   type="button"
+                  data-testid="login-password-toggle"
                   onClick={() => setShowPassword(!showPassword)}
                   disabled={isLoading}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 disabled:opacity-50"
@@ -78,13 +88,22 @@ export default function LoginPage() {
                 </button>
               </div>
             </div>
-            <Button type="submit" className="w-full bg-primary text-primary-foreground hover:bg-primary/90" disabled={isLoading}>
+            <Button
+              type="submit"
+              data-testid="login-submit"
+              className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
+              disabled={isLoading}
+            >
               {isLoading ? "Signing in..." : "Sign In"}
             </Button>
           </form>
           <div className="mt-4 text-center text-sm">
             Don&apos;t have an account?{" "}
-            <Link href="/register" className="text-primary hover:underline">
+            <Link
+              href="/register"
+              data-testid="login-signup-link"
+              className="text-primary hover:underline"
+            >
               Sign up
             </Link>
           </div>
