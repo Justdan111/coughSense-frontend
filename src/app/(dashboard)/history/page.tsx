@@ -7,15 +7,70 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Calendar, Trash2, AlertTriangle, CheckCircle } from "lucide-react"
 import { motion } from "framer-motion"
-import type { AnalysisResponse } from "@/lib/api"
+import type { AssessResponse } from "@/lib/api"
 
-interface AnalysisWithTimestamp extends AnalysisResponse {
+interface HistoryItem extends Partial<AssessResponse> {
   timestamp: string
+  confidence?: number
+  risk_level?: "low" | "medium" | "high"
+  result?: "risky" | "less_risky"
+}
+
+const toFiniteNumber = (...values: Array<unknown>) => {
+  for (const value of values) {
+    if (typeof value === "number" && Number.isFinite(value)) {
+      return value
+    }
+
+    if (typeof value === "string") {
+      const parsed = Number(value)
+      if (Number.isFinite(parsed)) {
+        return parsed
+      }
+    }
+  }
+
+  return null
+}
+
+const normalizeHistoryItem = (item: unknown): HistoryItem | null => {
+  if (!item || typeof item !== "object") return null
+
+  const data = item as Record<string, unknown>
+  const confidence = toFiniteNumber(
+    data.cough_confidence_pct,
+    data.confidence,
+    data.score
+  )
+
+  return {
+    ...data,
+    timestamp: String(data.timestamp ?? new Date().toISOString()),
+    confidence: confidence ?? undefined,
+    cough_confidence_pct: toFiniteNumber(data.cough_confidence_pct) ?? undefined,
+    risk_level:
+      data.risk_level === "low" || data.risk_level === "medium" || data.risk_level === "high"
+        ? data.risk_level
+        : undefined,
+    result: data.result === "risky" || data.result === "less_risky" ? data.result : undefined,
+  }
 }
 
 export default function HistoryPage() {
-  const [history, setHistory] = useState<AnalysisWithTimestamp[]>([])
+  const [history, setHistory] = useState<HistoryItem[]>([])
   const [isLoading, setIsLoading] = useState(true)
+
+  const getConfidenceValue = (item: HistoryItem) => {
+    const value = toFiniteNumber(item.cough_confidence_pct, item.confidence, item.score)
+    return value ?? 0
+  }
+
+  const getRiskLevel = (item: HistoryItem) => {
+    if (item.risk_level) return item.risk_level
+    if (item.result === "less_risky") return "low"
+    if (item.result === "risky") return "high"
+    return "medium"
+  }
 
   // Load history from localStorage on mount (client-side only)
   useEffect(() => {
@@ -23,7 +78,9 @@ export default function HistoryPage() {
       const saved = localStorage.getItem("analysis_history")
       if (saved) {
         const parsed = JSON.parse(saved)
-        setHistory(parsed)
+        if (Array.isArray(parsed)) {
+          setHistory(parsed.map(normalizeHistoryItem).filter((item): item is HistoryItem => item !== null))
+        }
       }
     } catch (error) {
       console.error("Failed to load history", error)
@@ -149,7 +206,7 @@ export default function HistoryPage() {
                             </span>
                             <span className="hidden sm:inline">•</span>
                             <span className="text-slate-600 font-medium">
-                              Confidence: {item.confidence.toFixed(1)}%
+                              Confidence: {getConfidenceValue(item).toFixed(1)}%
                             </span>
                           </div>
                         </div>
@@ -157,11 +214,11 @@ export default function HistoryPage() {
                       <div className="flex items-center justify-between sm:justify-end gap-3 sm:gap-4">
                         <Badge
                           className={`text-xs whitespace-nowrap flex items-center gap-1 ${getRiskColor(
-                            item.risk_level
+                            getRiskLevel(item)
                           )}`}
                         >
-                          {getRiskIcon(item.risk_level)}
-                          {item.risk_level.charAt(0).toUpperCase() + item.risk_level.slice(1)}
+                          {getRiskIcon(getRiskLevel(item))}
+                          {getRiskLevel(item).charAt(0).toUpperCase() + getRiskLevel(item).slice(1)}
                         </Badge>
                         <button
                           onClick={() => handleDeleteItem(index)}
