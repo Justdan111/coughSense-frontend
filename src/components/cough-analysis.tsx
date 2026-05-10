@@ -58,6 +58,7 @@ export function CoughAnalysisComponent({ onAnalysisComplete }: CoughAnalysisComp
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null)
   const audioChunksRef = useRef<Blob[]>([])
+  const recordedMimeTypeRef = useRef<string>("audio/webm")
   const timerRef = useRef<NodeJS.Timeout | null>(null)
   const audioRef = useRef<HTMLAudioElement | null>(null)
   const fileInputRef = useRef<HTMLInputElement | null>(null)
@@ -79,10 +80,31 @@ export function CoughAnalysisComponent({ onAnalysisComplete }: CoughAnalysisComp
     }
   }, [audioUrl])
 
+  // Browsers don't reliably encode WAV via MediaRecorder. We negotiate the best
+  // supported container/codec the current browser offers, then send the same
+  // type all the way through to the backend so it isn't mislabeled.
+  const pickSupportedMimeType = (): string => {
+    const candidates = [
+      "audio/webm;codecs=opus",
+      "audio/webm",
+      "audio/mp4;codecs=mp4a.40.2",
+      "audio/mp4",
+      "audio/ogg;codecs=opus",
+    ]
+    if (typeof MediaRecorder !== "undefined" && typeof MediaRecorder.isTypeSupported === "function") {
+      for (const candidate of candidates) {
+        if (MediaRecorder.isTypeSupported(candidate)) return candidate
+      }
+    }
+    return "audio/webm"
+  }
+
   const startRecording = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
-      const mediaRecorder = new MediaRecorder(stream)
+      const mimeType = pickSupportedMimeType()
+      recordedMimeTypeRef.current = mimeType
+      const mediaRecorder = new MediaRecorder(stream, { mimeType })
       mediaRecorderRef.current = mediaRecorder
       audioChunksRef.current = []
 
@@ -91,7 +113,9 @@ export function CoughAnalysisComponent({ onAnalysisComplete }: CoughAnalysisComp
       }
 
       mediaRecorder.onstop = () => {
-        const blob = new Blob(audioChunksRef.current, { type: "audio/wav" })
+        const blobType = mediaRecorder.mimeType || mimeType
+        recordedMimeTypeRef.current = blobType
+        const blob = new Blob(audioChunksRef.current, { type: blobType })
         setAudioBlob(blob)
         const url = URL.createObjectURL(blob)
         setAudioUrl(url)
@@ -175,14 +199,43 @@ export function CoughAnalysisComponent({ onAnalysisComplete }: CoughAnalysisComp
     }
   }
 
+  // Map a MIME type to a sensible filename extension so the backend, browsers,
+  // and any intermediate proxy/log can identify the format from the filename too.
+  const extensionForMimeType = (mimeType: string): string => {
+    const base = mimeType.split(";", 1)[0].trim().toLowerCase()
+    switch (base) {
+      case "audio/webm":
+        return "webm"
+      case "audio/ogg":
+        return "ogg"
+      case "audio/mp4":
+      case "audio/x-m4a":
+        return "m4a"
+      case "audio/aac":
+        return "aac"
+      case "audio/mpeg":
+      case "audio/mp3":
+        return "mp3"
+      case "audio/flac":
+        return "flac"
+      case "audio/wav":
+      case "audio/x-wav":
+        return "wav"
+      default:
+        return "bin"
+    }
+  }
+
   // Step 1: upload audio → get cough_confidence from /analyze
   const handleAnalyzeAudio = async () => {
     if (!audioBlob) return
     setStep("analyzing")
     setError(null)
     try {
-      const audioFile = new File([audioBlob], "cough_recording.wav", {
-        type: audioBlob.type || "audio/wav",
+      const blobType = audioBlob.type || recordedMimeTypeRef.current || "audio/webm"
+      const extension = extensionForMimeType(blobType)
+      const audioFile = new File([audioBlob], `cough_recording.${extension}`, {
+        type: blobType,
       })
       const result = await analysisService.analyzeCough(audioFile)
       console.log("Analyze result:", result)
