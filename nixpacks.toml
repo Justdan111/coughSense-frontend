@@ -1,0 +1,33 @@
+# Nixpacks build for sentry-admin (Next.js 16 standalone).
+# Synced with ./Dockerfile — when one changes, update both.
+#
+# Required build-time env (set in deploy platform UI):
+#   NEXT_PUBLIC_CONVEX_URL  — inlined into the client bundle
+#
+# Required runtime env (set in deploy platform UI):
+#   CONVEX_URL, CLERK_SECRET_KEY, RESEND_API_KEY, SECRET_COOKIE_PASSWORD, ...
+
+[phases.setup]
+nixPkgs = ["nodejs_22", "pnpm"]
+
+[phases.install]
+cmds = ["pnpm install --frozen-lockfile"]
+
+[phases.build]
+# Standalone output requires public/ and .next/static to be copied into
+# .next/standalone/ since the minimal server.js serves from its own cwd.
+# https://nextjs.org/docs/app/api-reference/config/next-config-js/output
+cmds = [
+  "pnpm run build",
+  "cp -r public .next/standalone/public",
+  "cp -r .next/static .next/standalone/.next/static",
+]
+
+[start]
+cmd = "node .next/standalone/server.js"
+
+[variables]
+NEXT_TELEMETRY_DISABLED = "1"
+NODE_ENV = "production"
+HOSTNAME = "0.0.0.0"
+PORT = "3000"
