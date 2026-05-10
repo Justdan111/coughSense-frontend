@@ -8,9 +8,7 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: true,
   },
   env: {
-    SUPABASE_URL: env.SUPABASE_URL,
-    SUPABASE_API_KEY: env.SUPABASE_API_KEY,
-    SUPABASE_JWT_SECRET: env.SUPABASE_JWT_SECRET,
+    FASTAPI_URL: env.FASTAPI_URL,
   },
   reactCompiler: true,
 };
