@@ -41,16 +41,28 @@ export function Header() {
             </div>
           ) : (
             <div className="flex items-center gap-3">
-              <Link href="/login" className="text-sm font-medium text-ct-muted hover:text-ct">Log in</Link>
+              <Link
+                href="/login"
+                data-testid="header-login"
+                className="text-sm font-medium text-ct-muted hover:text-ct"
+              >
+                Log in
+              </Link>
               <Button size="sm" className="bg-ct-primary hover:opacity-95 text-white" asChild>
-                <Link href="/login">Get Started</Link>
+                <Link href="/login" data-testid="header-get-started">Get Started</Link>
               </Button>
             </div>
           )}
         </nav>
 
         {/* Mobile menu toggle button */}
-        <Button variant="ghost" size="icon" className="md:hidden" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+        <Button
+          variant="ghost"
+          size="icon"
+          data-testid="header-mobile-toggle"
+          className="md:hidden"
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+        >
           {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
         </Button>
       </div>
@@ -88,11 +100,12 @@ export function Header() {
                     asChild
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    <Link href="/dashboard">Dashboard</Link>
+                    <Link href="/dashboard" data-testid="header-dashboard-mobile">Dashboard</Link>
                   </Button>
                   <Button
                     className="w-full bg-transparent"
                     variant="outline"
+                    data-testid="header-logout-mobile"
                     onClick={() => {
                       logout()
                       setMobileMenuOpen(false)
@@ -109,14 +122,14 @@ export function Header() {
                     asChild
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    <Link href="/login">Log in</Link>
+                    <Link href="/login" data-testid="header-login-mobile">Log in</Link>
                   </Button>
                   <Button
                     className="bg-ct-primary hover:opacity-95 w-full mt-2 text-white"
                     asChild
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    <Link href="/login">Get Started</Link>
+                    <Link href="/login" data-testid="header-get-started-mobile">Get Started</Link>
                   </Button>
                 </>
               )}

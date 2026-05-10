@@ -7,15 +7,70 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Calendar, Trash2, AlertTriangle, CheckCircle } from "lucide-react"
 import { motion } from "framer-motion"
-import type { AnalysisResponse } from "@/lib/api"
+import type { AssessResponse } from "@/lib/api"
 
-interface AnalysisWithTimestamp extends AnalysisResponse {
+interface HistoryItem extends Partial<AssessResponse> {
   timestamp: string
+  confidence?: number
+  risk_level?: "low" | "medium" | "high"
+  result?: "risky" | "less_risky"
+}
+
+const toFiniteNumber = (...values: Array<unknown>) => {
+  for (const value of values) {
+    if (typeof value === "number" && Number.isFinite(value)) {
+      return value
+    }
+
+    if (typeof value === "string") {
+      const parsed = Number(value)
+      if (Number.isFinite(parsed)) {
+        return parsed
+      }
+    }
+  }
+
+  return null
+}
+
+const normalizeHistoryItem = (item: unknown): HistoryItem | null => {
+  if (!item || typeof item !== "object") return null
+
+  const data = item as Record<string, unknown>
+  const confidence = toFiniteNumber(
+    data.cough_confidence_pct,
+    data.confidence,
+    data.score
+  )
+
+  return {
+    ...data,
+    timestamp: String(data.timestamp ?? new Date().toISOString()),
+    confidence: confidence ?? undefined,
+    cough_confidence_pct: toFiniteNumber(data.cough_confidence_pct) ?? undefined,
+    risk_level:
+      data.risk_level === "low" || data.risk_level === "medium" || data.risk_level === "high"
+        ? data.risk_level
+        : undefined,
+    result: data.result === "risky" || data.result === "less_risky" ? data.result : undefined,
+  }
 }
 
 export default function HistoryPage() {
-  const [history, setHistory] = useState<AnalysisWithTimestamp[]>([])
+  const [history, setHistory] = useState<HistoryItem[]>([])
   const [isLoading, setIsLoading] = useState(true)
+
+  const getConfidenceValue = (item: HistoryItem) => {
+    const value = toFiniteNumber(item.cough_confidence_pct, item.confidence, item.score)
+    return value ?? 0
+  }
+
+  const getRiskLevel = (item: HistoryItem) => {
+    if (item.risk_level) return item.risk_level
+    if (item.result === "less_risky") return "low"
+    if (item.result === "risky") return "high"
+    return "medium"
+  }
 
   // Load history from localStorage on mount (client-side only)
   useEffect(() => {
@@ -23,7 +78,9 @@ export default function HistoryPage() {
       const saved = localStorage.getItem("analysis_history")
       if (saved) {
         const parsed = JSON.parse(saved)
-        setHistory(parsed)
+        if (Array.isArray(parsed)) {
+          setHistory(parsed.map(normalizeHistoryItem).filter((item): item is HistoryItem => item !== null))
+        }
       }
     } catch (error) {
       console.error("Failed to load history", error)
@@ -94,6 +151,7 @@ export default function HistoryPage() {
             </div>
             {history.length > 0 && (
               <Button
+                data-testid="history-clear-all"
                 variant="destructive"
                 size="sm"
                 onClick={handleClearHistory}
@@ -111,7 +169,7 @@ export default function HistoryPage() {
           </p>
         </div>
 
-        <div className="grid gap-3 md:gap-4">
+        <div data-testid="history-list" className="grid gap-3 md:gap-4">
           {history.length > 0 ? (
             history.map((item, index) => (
               <motion.div
@@ -119,6 +177,7 @@ export default function HistoryPage() {
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: index * 0.05 }}
+                data-testid={`history-item-${index}`}
               >
                 <Card className="hover:shadow-ct transition-shadow bg-ct-surface rounded-2xl">
                       <CardContent className="p-4 sm:p-6">
@@ -128,7 +187,10 @@ export default function HistoryPage() {
                           <Calendar className="w-6 h-6" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <h3 className="font-semibold text-sm sm:text-base text-slate-900 truncate">
+                          <h3
+                            data-testid={`history-item-${index}-summary`}
+                            className="font-semibold text-sm sm:text-base text-slate-900 truncate"
+                          >
                             {item.summary}
                           </h3>
                           <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 text-xs sm:text-sm text-slate-500 mt-2">
@@ -148,22 +210,28 @@ export default function HistoryPage() {
                               })}
                             </span>
                             <span className="hidden sm:inline">•</span>
-                            <span className="text-slate-600 font-medium">
-                              Confidence: {item.confidence.toFixed(1)}%
+                            <span
+                              data-testid={`history-item-${index}-confidence`}
+                              className="text-slate-600 font-medium"
+                            >
+                              Confidence: {getConfidenceValue(item).toFixed(1)}%
                             </span>
                           </div>
                         </div>
                       </div>
                       <div className="flex items-center justify-between sm:justify-end gap-3 sm:gap-4">
                         <Badge
+                          data-testid={`history-item-${index}-risk`}
+                          data-risk={getRiskLevel(item)}
                           className={`text-xs whitespace-nowrap flex items-center gap-1 ${getRiskColor(
-                            item.risk_level
+                            getRiskLevel(item)
                           )}`}
                         >
-                          {getRiskIcon(item.risk_level)}
-                          {item.risk_level.charAt(0).toUpperCase() + item.risk_level.slice(1)}
+                          {getRiskIcon(getRiskLevel(item))}
+                          {getRiskLevel(item).charAt(0).toUpperCase() + getRiskLevel(item).slice(1)}
                         </Badge>
                         <button
+                          data-testid={`history-item-${index}-delete`}
                           onClick={() => handleDeleteItem(index)}
                           className="text-slate-400 hover:text-red-500 transition-colors p-1 rounded hover:bg-red-50"
                           title="Delete this analysis"
@@ -177,7 +245,7 @@ export default function HistoryPage() {
               </motion.div>
             ))
           ) : (
-            <Card className="border-dashed">
+            <Card data-testid="history-empty" className="border-dashed">
               <CardContent className="p-8 sm:p-12 text-center">
                 <div className="space-y-3">
                   <p className="text-sm sm:text-base text-slate-500">
